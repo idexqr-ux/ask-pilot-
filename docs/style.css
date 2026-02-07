@@ -123,6 +123,23 @@ h1 {
   font-size: 0.95rem;
 }
 
+.listen-btn {
+  margin: 8px 0 12px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: #ffffff;
+  color: var(--muted);
+  font-size: 0.95rem;
+  cursor: pointer;
+}
+
+.listen-btn:hover,
+.listen-btn:focus {
+  border-color: #b8c2ca;
+  color: var(--ink);
+}
+
 .divider {
   border: 0;
   border-top: 1px solid var(--border);
