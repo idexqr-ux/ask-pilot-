@@ -160,3 +160,32 @@ details summary {
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
 }
+
+/* Make the page quiet: collapse each card by default */
+.card-details { padding: 0; }
+
+.card-summary {
+  list-style: none;
+  cursor: pointer;
+  padding: 14px;
+  font-weight: 600;
+}
+
+.card-summary::-webkit-details-marker { display: none; }
+
+.card-details[open] .card-summary {
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 10px;
+}
+
+/* When open, give inner content breathing space */
+.card-details > *:not(summary) {
+  padding: 0 14px;
+}
+
+.card-details > details {
+  margin: 10px 14px 0;
+}
+
+/* Optional: reduce initial visual weight */
+.card { padding: 0; }
