@@ -224,6 +224,8 @@ function normaliseForSpeech(text) {
     // Dates & ranges
     .replace(/\bc\.\s*/gi, 'circa ')
     .replace(/\bYou are looking at\s+/gi, 'In front of you is ')
+    .replace(/\bIt represents\s+/gi, 'This object represents ')
+.replace(/\bThey show\s+/gi, 'These objects show ')
     .replace(/–/g, ' to ')
     .replace(/-/g, ' to ')
 
