@@ -220,8 +220,14 @@ let speaking = false;
 let currentUtterance = null;
 
 function speakText(text) {
+  // Spoken-friendly replacements
+  let spokenText = text
+    .replace(/\bc\.\s*/gi, 'circa ')
+    .replace(/–/g, ' to ')
+    .replace(/-/g, ' to ');
+
   window.speechSynthesis.cancel();
-  currentUtterance = new SpeechSynthesisUtterance(text);
+  currentUtterance = new SpeechSynthesisUtterance(spokenText);
   currentUtterance.rate = 0.9;
   currentUtterance.pitch = 1;
   window.speechSynthesis.speak(currentUtterance);
