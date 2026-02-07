@@ -230,6 +230,8 @@ function speakText(text) {
 
 document.querySelectorAll('.listen-btn').forEach(btn => {
   btn.addEventListener('click', () => {
+
+    // Toggle off if already speaking
     if (speaking) {
       window.speechSynthesis.cancel();
       speaking = false;
@@ -240,8 +242,21 @@ document.querySelectorAll('.listen-btn').forEach(btn => {
     const section = document.getElementById(id);
     if (!section) return;
 
-    const text = section.innerText;
-    speakText(text);
+    let textToRead = "";
+
+    // Look for a 30-second version first
+    const shortVersion = Array.from(section.querySelectorAll('details')).find(d =>
+      d.querySelector('summary') &&
+      d.querySelector('summary').innerText.toLowerCase().includes('30')
+    );
+
+    if (shortVersion) {
+      textToRead = shortVersion.innerText;
+    } else {
+      textToRead = section.innerText;
+    }
+
+    speakText(textToRead);
   });
 });
 </script>
