@@ -56,14 +56,19 @@ h1 {
 .ask-summary {
   list-style: none;
   cursor: pointer;
-  display: inline-block;
-  padding: 16px 40px;
-  min-width: 180px;
+
+  display: block;          /* key fix */
+  margin: 0 auto;          /* centres it */
+
+  padding: 14px 36px;      /* makes it longer */
+  min-width: 180px;        /* guarantees presence */
+
   border-radius: 999px;
-  border: 2px solid var(--border);
+  border: 1.5px solid var(--border);
   background: #ffffff;
+
   color: var(--ink);
-  font-size: 1.15rem;
+  font-size: 1.1rem;
   text-align: center;
 }
 
@@ -75,7 +80,9 @@ h1 {
 .ask-details { text-align: center; }
 .ask-details .note, .ask-details .chips, .ask-details .muted-line { text-align: left; }
 
-.ask-summary::-webkit-details-marker { display: none; }
+.ask-summary::-webkit-details-marker {
+  display: none;
+}
 
 .ask-details[open] .ask-summary { border-color: #b8c2ca; }
 
@@ -179,6 +186,9 @@ details summary { cursor: pointer; margin-top: 10px; font-weight: 600; }
 }
 
 /* Respect motion sensitivity */
-@media (prefers-reduced-motion: reduce) {
-  html { scroll-behavior: auto; }
+@media (min-width: 768px) {
+  .ask-summary {
+    min-width: 220px;
+  }
 }
+
