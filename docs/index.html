@@ -53,6 +53,10 @@
     <section id="gloves" class="card">
       <details class="card-details">
         <summary class="card-summary">Object 1 — Leather gloves (c. 1830–1850)</summary>
+        
+        <button class="listen-btn" data-target="gloves">
+  Listen to this section
+</button>
 
         <h3>What am I looking at?</h3>
         <p>You are looking at a pair of leather gloves shaped to fit human hands. The leather is thin and supple, and the seams along the fingers are stitched by hand. They narrow gently at the wrist and were made to be worn close to the skin.</p>
@@ -71,6 +75,10 @@
 
         <details>
           <summary>30-second version</summary>
+          <button class="listen-btn" data-target="gloves">
+  Listen to this section
+</button>
+
           <p>These gloves were made by hand from fine leather. Each finger was stitched carefully. They were worn daily and valued for fit and durability.</p>
         </details>
 
@@ -82,6 +90,9 @@
     <section id="needle" class="card">
       <details class="card-details">
         <summary class="card-summary">Object 2 — Steel sewing needle (c. 1800–1850)</summary>
+        <button class="listen-btn" data-target="gloves">
+  Listen to this section
+</button>
 
         <h3>What am I looking at?</h3>
         <p>A small steel needle with a sharp point and a tiny eye for thread. It fits easily between finger and thumb and would have been used thousands of times.</p>
@@ -111,6 +122,9 @@
     <section id="woodstock" class="card">
       <details class="card-details">
         <summary class="card-summary">Why was Woodstock known for glove-making?</summary>
+        <button class="listen-btn" data-target="gloves">
+  Listen to this section
+</button>
 
         <p>Because it had the right conditions rather than a single factory: access to fine leather, skilled home-based labour, and nearby markets. Glove-making was quiet, precise work that could be done at home in good light, and the town became known for reliable, well-made gloves.</p>
 
@@ -122,6 +136,9 @@
     <section id="redditch" class="card">
       <details class="card-details">
         <summary class="card-summary">Where were needles made?</summary>
+        <button class="listen-btn" data-target="gloves">
+  Listen to this section
+</button>
 
         <p>Many sewing needles used in Britain were made in specialist needle-making towns elsewhere, then sold through merchants to places like Woodstock. The needle connects domestic work with wider industrial networks.</p>
 
@@ -133,6 +150,10 @@
     <section id="time" class="card">
       <details class="card-details">
         <summary class="card-summary">How long did it take to make a pair of gloves?</summary>
+        
+<button class="listen-btn" data-target="gloves">
+  Listen to this section
+</button>
 
         <p>Many hours, often spread over more than one day. Cutting the leather required care, and sewing each finger was slow, precise work. Rushing could ruin the leather and waste hours of effort.</p>
 
@@ -155,6 +176,9 @@
     <section id="what-happened" class="card">
       <details class="card-details">
         <summary class="card-summary">What happened to this kind of work?</summary>
+        <button class="listen-btn" data-target="gloves">
+  Listen to this section
+</button>
 
         <p>As factories and machines expanded, production moved away from homes into workshops and larger centres. The skills did not vanish, but the organisation of the work changed — and local hand-sewing became less common.</p>
 
@@ -177,6 +201,9 @@
     <section id="bridge" class="card">
       <details class="card-details">
         <summary class="card-summary">What does this have to do with us now?</summary>
+        <button class="listen-btn" data-target="gloves">
+  Listen to this section
+</button>
 
         <p>It reminds us that everyday objects were once made slowly, by people whose work was woven into daily life. It invites a pause to notice the hands behind the objects we rely on — and to consider what we value: speed, or care.</p>
 
@@ -188,5 +215,36 @@
       <p><small>Ask Pilot — calm, spoken-first, visitor-choice.</small></p>
     </footer>
   </main>
+  <script>
+let speaking = false;
+let currentUtterance = null;
+
+function speakText(text) {
+  window.speechSynthesis.cancel();
+  currentUtterance = new SpeechSynthesisUtterance(text);
+  currentUtterance.rate = 0.9;
+  currentUtterance.pitch = 1;
+  window.speechSynthesis.speak(currentUtterance);
+  speaking = true;
+}
+
+document.querySelectorAll('.listen-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    if (speaking) {
+      window.speechSynthesis.cancel();
+      speaking = false;
+      return;
+    }
+
+    const id = btn.dataset.target;
+    const section = document.getElementById(id);
+    if (!section) return;
+
+    const text = section.innerText;
+    speakText(text);
+  });
+});
+</script>
+
 </body>
 </html>
