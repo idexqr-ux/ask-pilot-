@@ -215,21 +215,57 @@
       <p><small>Ask Pilot — calm, spoken-first, visitor-choice.</small></p>
     </footer>
   </main>
-  <script>
+<script>
 let speaking = false;
 let currentUtterance = null;
 
-function speakText(text) {
-  // Spoken-friendly replacements
-  let spokenText = text
+function normaliseForSpeech(text) {
+  return text
+    // Dates & ranges
     .replace(/\bc\.\s*/gi, 'circa ')
     .replace(/–/g, ' to ')
-    .replace(/-/g, ' to ');
+    .replace(/-/g, ' to ')
+
+    // Currency
+    .replace(/£(\d+)/g, '£$1')
+    .replace(/£/g, 'pounds ')
+    .replace(/\$(\d+)/g, '$$1')
+    .replace(/\$/g, 'dollars ')
+
+    // Measurements
+    .replace(/\bcm\b/gi, ' centimetres')
+    .replace(/\bmm\b/gi, ' millimetres')
+    .replace(/\bm\b/gi, ' metres')
+    .replace(/\bkg\b/gi, ' kilograms')
+    .replace(/\bg\b/gi, ' grams')
+
+    // Time
+    .replace(/\bhrs?\b/gi, ' hours')
+    .replace(/\bmins?\b/gi, ' minutes')
+
+    // Common abbreviations
+    .replace(/\be\.g\.\b/gi, 'for example')
+    .replace(/\bi\.e\.\b/gi, 'that is')
+    .replace(/\bet al\.\b/gi, 'and others')
+    .replace(/\bvs\b/gi, 'versus')
+
+    // Initials (A. B. Smith → A B Smith)
+    .replace(/\b([A-Z])\.\s*(?=[A-Z]\.)/g, '$1 ')
+    .replace(/\b([A-Z])\.(?=\s)/g, '$1')
+
+    // Clean double spaces
+    .replace(/\s{2,}/g, ' ')
+    .trim();
+}
+
+function speakText(text) {
+  const spokenText = normaliseForSpeech(text);
 
   window.speechSynthesis.cancel();
   currentUtterance = new SpeechSynthesisUtterance(spokenText);
   currentUtterance.rate = 0.9;
   currentUtterance.pitch = 1;
+
   window.speechSynthesis.speak(currentUtterance);
   speaking = true;
 }
@@ -237,7 +273,6 @@ function speakText(text) {
 document.querySelectorAll('.listen-btn').forEach(btn => {
   btn.addEventListener('click', () => {
 
-    // Toggle off if already speaking
     if (speaking) {
       window.speechSynthesis.cancel();
       speaking = false;
@@ -248,20 +283,15 @@ document.querySelectorAll('.listen-btn').forEach(btn => {
     const section = document.getElementById(id);
     if (!section) return;
 
-    let textToRead = "";
+    let textToRead = '';
 
-    // Look for a 30-second version first
+    // Prefer 30-second version if present
     const shortVersion = Array.from(section.querySelectorAll('details')).find(d =>
       d.querySelector('summary') &&
       d.querySelector('summary').innerText.toLowerCase().includes('30')
     );
 
-    if (shortVersion) {
-      textToRead = shortVersion.innerText;
-    } else {
-      textToRead = section.innerText;
-    }
-
+    textToRead = shortVersion ? shortVersion.innerText : section.innerText;
     speakText(textToRead);
   });
 });
