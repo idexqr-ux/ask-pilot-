@@ -66,6 +66,9 @@ h1 {
   font-size: 1.05rem;
 }
 
+.ask-details { text-align: center; }
+.ask-details .note, .ask-details .chips, .ask-details .muted-line { text-align: left; }
+
 .ask-summary::-webkit-details-marker { display: none; }
 
 .ask-details[open] .ask-summary { border-color: #b8c2ca; }
