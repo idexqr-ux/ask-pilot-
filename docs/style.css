@@ -206,3 +206,24 @@ details summary {
   font-size: 0.95rem;
   color: var(--muted);
 }
+
+.divider {
+  border: 0;
+  border-top: 1px solid var(--border);
+  margin: 16px 0 6px;
+}
+
+.muted-line {
+  margin: 10px 0 0;
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+.card-summary {
+  color: var(--muted);
+  font-weight: 600;
+}
+
+.card-details[open] .card-summary {
+  color: var(--ink);
+}
