@@ -223,17 +223,28 @@ function normaliseForSpeech(text) {
   return text
     // Dates & ranges
     .replace(/\bc\.\s*/gi, 'circa ')
-   // Years spoken naturally (e.g. 1830 → eighteen thirty)
+ // Years spoken naturally (e.g. 1830 → eighteen thirty)
 .replace(/\b(1[5-9]\d{2})\b/g, (match) => {
   const year = parseInt(match, 10);
-  const first = Math.floor(year / 100);
-  const second = year % 100;
+  const century = Math.floor(year / 100);   // 15, 16, 17, 18, 19
+  const lastTwo = year % 100;               // 0–99
 
-  if (second === 0) {
-    return `${first} hundred`;
-  }
-  return `${first} ${second}`;
+  const centuryWord = {
+    15: "fifteen",
+    16: "sixteen",
+    17: "seventeen",
+    18: "eighteen",
+    19: "nineteen"
+  }[century] || String(century);
+
+  if (lastTwo === 0) return `${centuryWord} hundred`;
+
+  // Turn 01–09 into "oh one" etc (nice for years like 1805)
+  if (lastTwo < 10) return `${centuryWord} oh ${lastTwo}`;
+
+  return `${centuryWord} ${lastTwo}`;
 })
+
  .replace(/\bYou are looking at\s+/gi, 'In front of you is ')
     .replace(/\bIt represents\s+/gi, 'This object represents ')
 .replace(/\bThey show\s+/gi, 'These objects show ')
