@@ -183,3 +183,15 @@ details summary {
 .card-details > *:not(summary) {
   padding: 0 14px;
 }
+
+.card-summary::after {
+  content: "›";
+  float: right;
+  color: var(--muted);
+}
+
+.card-details[open] .card-summary::after {
+  content: "⌄";
+}
+
+.card { margin: 10px 0; }
