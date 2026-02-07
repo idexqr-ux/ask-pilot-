@@ -9,6 +9,8 @@
 
 * { box-sizing: border-box; }
 
+html { scroll-behavior: smooth; }
+
 body {
   margin: 0;
   font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
@@ -48,6 +50,30 @@ h1 {
   margin: 12px 0 16px;
 }
 
+/* Silent start: Ask opens the questions */
+.ask-details {
+  margin: 10px 0 16px;
+}
+
+.ask-summary {
+  list-style: none;
+  cursor: pointer;
+  display: inline-block;
+  padding: 12px 22px;
+  border-radius: 999px;
+  border: 1.5px solid var(--border);
+  background: #ffffff;
+  color: var(--ink);
+  text-decoration: none;
+  font-size: 1.05rem;
+}
+
+.ask-summary::-webkit-details-marker { display: none; }
+
+.ask-details[open] .ask-summary {
+  border-color: #b8c2ca;
+}
+
 .chips {
   display: flex;
   flex-wrap: wrap;
@@ -67,7 +93,6 @@ h1 {
 }
 
 .chip:focus, .chip:hover {
-  outline: none;
   border-color: #b8c2ca;
 }
 
@@ -108,6 +133,8 @@ details summary {
   padding: 18px 0 28px;
   color: var(--muted);
 }
+
+/* Old Ask button styles (safe to keep; remove if unused) */
 .ask-wrap {
   text-align: center;
   margin: 14px 0 18px;
@@ -127,4 +154,9 @@ details summary {
 .ask-button:hover,
 .ask-button:focus {
   border-color: #b8c2ca;
+}
+
+/* Respect motion sensitivity */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
 }
