@@ -195,3 +195,14 @@ details summary {
 }
 
 .card { margin: 10px 0; }
+
+.divider {
+  border: 0;
+  border-top: 1px solid var(--border);
+  margin: 16px 0 10px;
+}
+
+.kicker.small {
+  font-size: 0.95rem;
+  color: var(--muted);
+}
