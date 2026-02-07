@@ -233,3 +233,19 @@ details summary {
   color: var(--muted);
   font-size: 0.95rem;
 }
+
+.browse-label {
+  margin: 10px 0 6px;
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+.card-summary::after {
+  content: "›";
+  float: right;
+  color: var(--muted);
+}
+
+.card-details[open] .card-summary::after {
+  content: "⌄";
+}
