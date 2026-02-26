@@ -1,5 +1,5 @@
 // IdexQR® PWA – Offline Magic (safe + predictable)
-const VERSION = "v1"; // bump to v2, v3 when you want to force-refresh caches
+const VERSION = "v2"; // bump to v2, v3 when you want to force-refresh caches
 const CACHE_NAME = `idexqr-racecard-${VERSION}`;
 
 const APP_SHELL = [
@@ -56,23 +56,22 @@ self.addEventListener("fetch", (event) => {
     (req.headers.get("accept") || "").includes("text/html");
 
   if (isHTMLNav) {
-    event.respondWith(
-      (async () => {
-        const cache = await caches.open(CACHE_NAME);
-        const cached = await cache.match(req);
-        if (cached) return cached;
+  event.respondWith(
+    (async () => {
+      const cache = await caches.open(CACHE_NAME);
 
-        try {
-          const fresh = await fetch(req);
-          cache.put(req, fresh.clone());
-          return fresh;
-        } catch {
-          return cache.match("./offline.html");
-        }
-      })()
-    );
-    return;
-  }
+      try {
+        const fresh = await fetch(req); // always try network first
+        cache.put(req, fresh.clone());
+        return fresh;
+      } catch {
+        const cached = await cache.match(req);
+        return cached || cache.match("./offline.html");
+      }
+    })()
+  );
+  return;
+}
 
   // CSV & other assets
   event.respondWith(
