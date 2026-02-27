@@ -6,7 +6,6 @@ async function loadCSV(path) {
 }
 
 function parseCSV(text) {
-  // Auto-detect delimiter (comma or tab)
   const firstLine = (text.split(/\r?\n/).find(l => l.trim().length) || "");
   const delimiter = (firstLine.includes("\t") && !firstLine.includes(",")) ? "\t" : ",";
 
@@ -30,6 +29,19 @@ function parseCSV(text) {
       if (c === "\r" && next === "\n") i++;
       continue;
     }
+
+    cell += c;
+  }
+
+  if (cell.length || row.length) { row.push(cell); rows.push(row); }
+
+  const rawHeaders = (rows.shift() || []);
+  const headers = rawHeaders.map(h => String(h).replace(/^\uFEFF/, "").trim());
+
+  return rows
+    .filter(r => r.length && r.some(x => String(x).trim() !== ""))
+    .map(r => Object.fromEntries(headers.map((h, idx) => [h, String(r[idx] ?? "").trim()])));
+}
 
     cell += c;
   }
