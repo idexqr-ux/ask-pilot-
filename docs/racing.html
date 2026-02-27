@@ -13,15 +13,62 @@
     <div id="runners"></div>
     <p><a class="back" href="./legends.html">Legends</a></p>
   </div>
-<script src="./app.js"></script>
 <script>
+function qs(name) {
+  return new URLSearchParams(location.search).get(name);
+}
+
+function parseCSV(text) {
+  // Handle BOM and normal comma CSV
+  const lines = text.split(/\r?\n/).filter(l => l.trim().length);
+  if (!lines.length) return [];
+
+  // Split by comma with basic quote handling
+  const splitLine = (line) => {
+    const out = [];
+    let cur = "";
+    let inQ = false;
+    for (let i = 0; i < line.length; i++) {
+      const c = line[i];
+      const n = line[i + 1];
+      if (c === '"' && inQ && n === '"') { cur += '"'; i++; continue; }
+      if (c === '"') { inQ = !inQ; continue; }
+      if (c === ',' && !inQ) { out.push(cur); cur = ""; continue; }
+      cur += c;
+    }
+    out.push(cur);
+    return out.map(s => s.trim());
+  };
+
+  const rawHeaders = splitLine(lines[0]);
+  const headers = rawHeaders.map(h => String(h).replace(/^\uFEFF/, "").trim());
+
+  return lines.slice(1).map(line => {
+    const cols = splitLine(line);
+    const obj = {};
+    headers.forEach((h, idx) => obj[h] = (cols[idx] ?? "").trim());
+    return obj;
+  });
+}
+
+async function loadCSV(url) {
+  const res = await fetch(url, { cache: "no-store" });
+  if (!res.ok) throw new Error(`CSV fetch failed: ${res.status}`);
+  const text = await res.text();
+  return parseCSV(text);
+}
+
 (async () => {
   const raceNo = qs("race_no") || "1";
-  const data = await loadCSV("./gatecard.csv");
+
+  // Absolute URL to remove any path confusion
+  const url = "https://idexqr-ux.github.io/ask-pilot-/gatecard.csv?x=" + Date.now();
+  const data = await loadCSV(url);
 
   const raceRows = data.filter(r => String(r.race_no) === String(raceNo));
   if (!raceRows.length) {
     document.getElementById("raceTitle").textContent = "Race not found";
+    document.getElementById("runners").innerHTML = `<div class="card">No rows matched race_no=${raceNo}.</div>`;
     return;
   }
 
