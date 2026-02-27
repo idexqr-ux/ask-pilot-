@@ -1,11 +1,12 @@
 {
-  "name": "Ask — IdexQR®",
+  "name": "IdexQR Ask Pilot",
   "short_name": "Ask",
-  "start_url": "./",
+  "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#f7f6f3",
-  "theme_color": "#B8C6C1",
+  "theme_color": "#f7f6f3",
   "icons": []
+}
     {
       "src": "./icons/icon-192.png",
       "sizes": "192x192",
