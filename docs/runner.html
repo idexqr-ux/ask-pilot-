@@ -15,45 +15,41 @@
   </div>
 
   <script src="./app.js"></script>
-  <script>
-  (async () => {
-    const raceNo = qs("race_no");
-    const horseNo = qs("horse_no");
-    document.getElementById("backLink").href = `./racing.html?race_no=${encodeURIComponent(raceNo || "1")}`;
+<script>
+(async () => {
+  const raceNo = qs("race_no");
+  const horseNo = qs("horse_no");
+  document.getElementById("backLink").href = `./racing.html?race_no=${encodeURIComponent(raceNo || "1")}`;
 
-    const data = await loadCSV("./gatecard.csv");
-    const r = data.find(x =>
-      String(x.race_no) === String(raceNo) &&
-      String(x.horse_no) === String(horseNo)
-    );
+  const data = await loadCSV("./gatecard.csv");
+  const r = data.find(x =>
+    String(x.race_no) === String(raceNo) &&
+    String(x.horse_no) === String(horseNo)
+  );
 
-    if (!r) {
-      document.getElementById("name").textContent = "Runner not found";
-      document.getElementById("meta").textContent = "—";
-      document.getElementById("notes").textContent = "—";
-      return;
-    }
+  if (!r) {
+    document.getElementById("name").textContent = "Runner not found";
+    document.getElementById("meta").textContent = "—";
+    document.getElementById("notes").textContent = "—";
+    return;
+  }
 
-    document.getElementById("name").textContent = `${r.horse_no}. ${r.horse_name}`;
+  const safe = (s) => (s ?? "—").toString().replaceAll("<","&lt;").replaceAll(">","&gt;");
 
-    const colours = [r.cap_colour, r.body_colour, r.sleeves_colour].filter(Boolean).join(" / ");
-    const safe = (s) => (s || "—").replaceAll("<","&lt;").replaceAll(">","&gt;");
+  document.getElementById("name").textContent = `${r.horse_no}. ${r.horse_name}`;
 
-    document.getElementById("meta").innerHTML = `
-      <div><strong>Meeting:</strong> ${safe(r.event_name)}</div>
-      <div><strong>Race:</strong> ${safe(r.race_no)}</div>
-      <div><strong>Age/Sex:</strong> ${safe(r.age)} ${safe(r.sex)}</div>
-      <div><strong>Weight:</strong> ${safe(r.weight)}</div>
-      <div><strong>Going:</strong> ${safe(r.going)}</div>
-      <div><strong>Trainer:</strong> ${safe(r.trainer)}</div>
-      <div><strong>Jockey:</strong> ${safe(r.jockey)}</div>
-      <div><strong>Owner:</strong> ${safe(r.owner)}</div>
-      <div><strong>Colours:</strong> ${safe(colours)}</div>
-    `;
-
-    document.getElementById("notes").innerHTML =
-      `<div><strong>Notes:</strong></div><div>${safe(r.notes)}</div>`;
-  })().catch(err => console.error("RUNNER ERROR:", err));
-  </script>
+  document.getElementById("meta").innerHTML = `
+    <div><strong>Meeting:</strong> ${safe(r.meeting_name)}</div>
+    <div><strong>Race:</strong> ${safe(r.race_no)}</div>
+    <div><strong>Age/Sex:</strong> ${safe(r.age)} ${safe(r.sex)}</div>
+    <div><strong>Trainer:</strong> ${safe(r.trainer_name)}</div>
+    <div><strong>Jockey:</strong> ${safe(r.jockey_name)}</div>
+    <div><strong>Owner:</strong> ${safe(r.owner)}</div>
+    <div><strong>Weight:</strong> ${safe(r.weight_stone)}st ${safe(r.weight_pounds)}lb</div>
+    <div><strong>Colours:</strong> ${safe(r.jockey_colours)}</div>
+    <div><strong>Form (code):</strong> ${safe(r.form_code)}</div>
+  `;
+})();
+</script>
 </body>
 </html>
