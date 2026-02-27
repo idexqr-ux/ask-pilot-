@@ -51,7 +51,6 @@ function parseCSV(text) {
 
   const rawHeaders = (rows.shift() || []);
   const headers = rawHeaders.map(h => String(h).replace(/^\uFEFF/, "").trim());
-
   return rows
     .filter(r => r.length && r.some(x => String(x).trim() !== ""))
     .map(r => Object.fromEntries(headers.map((h, idx) => [h, String(r[idx] ?? "").trim()])));
