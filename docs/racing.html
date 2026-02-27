@@ -16,9 +16,11 @@
 
   <script src="./app.js"></script>
   <script>
-  (async () => {
+  console.log("RACING SCRIPT RUNNING");  
+  (async () => {...}):
   const raceNo = qs("race_no") || "1";
   const data = await loadCSV("./gatecard.csv");
+console.log("CSV rows:", data.length, "first row:", data[0]);
 
   const raceRows = data.filter(r => String(r.race_no) === String(raceNo));
 
