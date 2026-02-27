@@ -15,30 +15,31 @@
   </div>
 
   <script src="./app.js"></script>
-  <script>
-  console.log("RACING SCRIPT RUNNING");  
-  (async () => {...}):
+<script>
+(async () => {
   const raceNo = qs("race_no") || "1";
   const data = await loadCSV("./gatecard.csv");
-console.log("CSV rows:", data.length, "first row:", data[0]);
 
   const raceRows = data.filter(r => String(r.race_no) === String(raceNo));
-
   if (!raceRows.length) {
     document.getElementById("raceTitle").textContent = "Race not found";
     return;
   }
 
-  // Find race header row (no horse_no)
-  const raceHeader = raceRows.find(r => !r.horse_no);
-
-  // Find actual runners
+  const raceHeader = raceRows.find(r => !String(r.horse_no || "").trim());
   const runners = raceRows
-    .filter(r => r.horse_no)
-    .sort((a, b) => Number(a.horse_no) - Number(b.horse_no));
+    .filter(r => String(r.horse_no || "").trim())
+    .sort((a,b) => Number(a.horse_no) - Number(b.horse_no));
 
-  const meeting = raceHeader?.meeting_name || runners[0]?.meeting_name || "";
-  const raceName = raceHeader?.race_name || "";
+  const meeting =
+    (raceHeader?.meeting_name || "").trim() ||
+    (runners[0]?.meeting_name || "").trim() ||
+    "Meeting";
+
+  const raceName =
+    (raceHeader?.race_name || "").trim() ||
+    (runners[0]?.race_name || "").trim() ||
+    "Race";
 
   document.getElementById("raceTitle").textContent =
     `${meeting} — Race ${raceNo}: ${raceName}`;
@@ -46,10 +47,10 @@ console.log("CSV rows:", data.length, "first row:", data[0]);
   document.getElementById("runners").innerHTML = runners.map(r =>
     `<a class="card" href="./runner.html?race_no=${encodeURIComponent(r.race_no)}&horse_no=${encodeURIComponent(r.horse_no)}">
       <div class="title">${r.horse_no}. ${r.horse_name}</div>
-      <div class="sub">${r.trainer_name} • ${r.weight_stone}st ${r.weight_pounds}lb</div>
+      <div class="sub">${r.trainer_name || "—"} • ${r.weight_stone || "—"}st ${r.weight_pounds || "—"}lb</div>
     </a>`
-  ).join("");
+  ).join("") || `<div class="card">No runners found for this race.</div>`;
 })();
-   </script>
+</script>
 </body>
 </html>
