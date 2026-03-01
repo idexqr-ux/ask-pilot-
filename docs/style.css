@@ -244,6 +244,12 @@ a.card {
   display: block;
 }
 
+a.card {
+  background: #F7F9F8;
+  border-color: #cfd7dc;
+  box-shadow: 0 1px 0 rgba(0,0,0,0.03);
+}
+
 a.card:active {
   opacity: 0.92;
 }
