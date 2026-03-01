@@ -9,105 +9,106 @@
 <body>
   <div class="wrap">
     <a id="backLink" class="back" href="./racing.html">← Back</a>
-<h1 id="name">Runner</h1>
-<div id="meta" class="card"></div>
-<div id="notes" class="card">
-  <div class="title">Ask</div>
 
-  <div class="ask-prompts">
-    <button type="button" onclick="askQuestion('What modern distance is 1 mile 4 furlongs?')">
-      What modern distance is 1 mile 4 furlongs?
-    </button>
+    <h1 id="name">Runner</h1>
 
-    <button type="button" onclick="askQuestion('Why is the dam\'s sire listed?')">
-      Why is the dam's sire listed?
-    </button>
+    <div id="meta" class="card"></div>
+
+    <div id="notes" class="card">
+      <div class="title">Ask</div>
+
+      <div class="ask-prompts">
+        <button type="button" onclick="askQuestion('What modern distance is 1 mile 4 furlongs?')">
+          What modern distance is 1 mile 4 furlongs?
+        </button>
+
+        <button type="button" onclick="askQuestion('Why is the dam\'s sire listed?')">
+          Why is the dam's sire listed?
+        </button>
+
+        <button type="button" onclick="askQuestion('What does the form code mean?')">
+          What does the form code mean?
+        </button>
+      </div>
+
+      <div class="ask-input">
+        <input id="askInput" type="text" placeholder="Type a question…" />
+        <button type="button" onclick="askQuestion(document.getElementById('askInput').value)">
+          Ask
+        </button>
+      </div>
+
+      <div id="askAnswer" class="ask-answer">
+        Choose a question above, or type your own.
+      </div>
+    </div>
   </div>
 
-    <div class="ask-input">
-    <input id="askInput" type="text" placeholder="Type a question…" />
-    <button type="button" onclick="askQuestion(document.getElementById('askInput').value)">
-      Ask
-    </button>
-  </div>
-
-  <div id="askAnswer" class="ask-answer">
-    Choose a question above, or type your own.
-  </div>
-</div>
-
-  <div id="askAnswer" class="ask-answer">Choose a question above, or type your own.</div>
-</div>
-
-  <div id="notes" class="card">
-  <div class="title">Ask</div>
-            
   <script src="./app.js"></script>
-<script>
-function qs(name){ return new URLSearchParams(location.search).get(name); }
+  <script>
+    function qs(name){ return new URLSearchParams(location.search).get(name); }
 
-function parseCSV(text){
-  const lines = text.split(/\r?\n/).filter(l => l.trim().length);
-  if (!lines.length) return [];
-  const splitLine = (line) => {
-    const out=[]; let cur=""; let inQ=false;
-    for (let i=0;i<line.length;i++){
-      const c=line[i], n=line[i+1];
-      if (c === '"' && inQ && n === '"'){ cur+='"'; i++; continue; }
-      if (c === '"'){ inQ=!inQ; continue; }
-      if (c === ',' && !inQ){ out.push(cur); cur=""; continue; }
-      cur+=c;
+    function parseCSV(text){
+      const lines = text.split(/\r?\n/).filter(l => l.trim().length);
+      if (!lines.length) return [];
+      const splitLine = (line) => {
+        const out=[]; let cur=""; let inQ=false;
+        for (let i=0;i<line.length;i++){
+          const c=line[i], n=line[i+1];
+          if (c === '"' && inQ && n === '"'){ cur+='"'; i++; continue; }
+          if (c === '"'){ inQ=!inQ; continue; }
+          if (c === ',' && !inQ){ out.push(cur); cur=""; continue; }
+          cur+=c;
+        }
+        out.push(cur);
+        return out.map(s => s.trim());
+      };
+      const headers = splitLine(lines[0]).map(h => String(h).replace(/^\uFEFF/, "").trim());
+      return lines.slice(1).map(line => {
+        const cols = splitLine(line);
+        const obj = {};
+        headers.forEach((h, idx) => obj[h] = (cols[idx] ?? "").trim());
+        return obj;
+      });
     }
-    out.push(cur);
-    return out.map(s => s.trim());
-  };
-  const headers = splitLine(lines[0]).map(h => String(h).replace(/^\uFEFF/, "").trim());
-  return lines.slice(1).map(line => {
-    const cols = splitLine(line);
-    const obj = {};
-    headers.forEach((h, idx) => obj[h] = (cols[idx] ?? "").trim());
-    return obj;
-  });
-}
 
-async function loadCSV(url){
-  const res = await fetch(url, { cache:"no-store" });
-  if (!res.ok) throw new Error(`CSV fetch failed: ${res.status}`);
-  return parseCSV(await res.text());
-}
+    async function loadCSV(url){
+      const res = await fetch(url, { cache:"no-store" });
+      if (!res.ok) throw new Error(`CSV fetch failed: ${res.status}`);
+      return parseCSV(await res.text());
+    }
 
-const safe = (s) => (s ?? "—").toString().replaceAll("<","&lt;").replaceAll(">","&gt;");
+    const safe = (s) => (s ?? "—").toString().replaceAll("<","&lt;").replaceAll(">","&gt;");
 
-(async () => {
-  const raceNo = qs("race_no");
-  const horseNo = qs("horse_no");
-  document.getElementById("backLink").href = `./racing.html?race_no=${encodeURIComponent(raceNo || "1")}`;
+    (async () => {
+      const raceNo = qs("race_no");
+      const horseNo = qs("horse_no");
+      document.getElementById("backLink").href = `./racing.html?race_no=${encodeURIComponent(raceNo || "1")}`;
 
-  const url = "https://idexqr-ux.github.io/ask-pilot-/gatecard.csv?x=" + Date.now();
-  const data = await loadCSV(url);
+      const url = "https://idexqr-ux.github.io/ask-pilot-/gatecard.csv?x=" + Date.now();
+      const data = await loadCSV(url);
 
-  const r = data.find(x => String(x.race_no) === String(raceNo) && String(x.horse_no) === String(horseNo));
+      const r = data.find(x => String(x.race_no) === String(raceNo) && String(x.horse_no) === String(horseNo));
 
-  if (!r) {
-    document.getElementById("name").textContent = "Runner not found";
-    document.getElementById("meta").textContent = "—";
-    document.getElementById("notes").textContent = "—";
-    return;
-  }
+      if (!r) {
+        document.getElementById("name").textContent = "Runner not found";
+        document.getElementById("meta").textContent = "—";
+        return;
+      }
 
-  document.getElementById("name").textContent = `${r.horse_no}. ${r.horse_name}`;
-  document.getElementById("meta").innerHTML = `
-    <div><strong>Meeting:</strong> ${safe(r.meeting_name)}</div>
-    <div><strong>Race:</strong> ${safe(r.race_no)}</div>
-    <div><strong>Age:</strong> ${safe(r.age)}</div>
-    <div><strong>Owner:</strong> ${safe(r.owner)}</div>
-    <div><strong>Trainer:</strong> ${safe(r.trainer_name)}</div>
-    <div><strong>Jockey:</strong> ${safe(r.jockey_name)}</div>
-    <div><strong>Weight:</strong> ${safe(r.weight_stone)}st ${safe(r.weight_pounds)}lb</div>
-    <div><strong>Colours:</strong> ${safe(r.jockey_colours)}</div>
-    <div><strong>Form (code):</strong> ${safe(r.form_code)}</div>
-  `;
-})();
-</script>
+      document.getElementById("name").textContent = `${r.horse_no}. ${r.horse_name}`;
+      document.getElementById("meta").innerHTML = `
+        <div><strong>Meeting:</strong> ${safe(r.meeting_name)}</div>
+        <div><strong>Race:</strong> ${safe(r.race_no)}</div>
+        <div><strong>Age:</strong> ${safe(r.age)}</div>
+        <div><strong>Owner:</strong> ${safe(r.owner)}</div>
+        <div><strong>Trainer:</strong> ${safe(r.trainer_name)}</div>
+        <div><strong>Jockey:</strong> ${safe(r.jockey_name)}</div>
+        <div><strong>Weight:</strong> ${safe(r.weight_stone)}st ${safe(r.weight_pounds)}lb</div>
+        <div><strong>Colours:</strong> ${safe(r.jockey_colours)}</div>
+        <div><strong>Form (code):</strong> ${safe(r.form_code)}</div>
+      `;
+    })();
+  </script>
 </body>
 </html>
