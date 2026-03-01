@@ -3,20 +3,20 @@ async function loadCSV(path) {
   if (!res.ok) throw new Error(`Failed to load ${path}: ${res.status}`);
   const text = await res.text();
 
-// Fix: some exports wrap EACH WHOLE ROW in quotes, making it a 1-column CSV.
-// If a line starts/ends with a quote and does NOT contain '","', strip the outer quotes.
-const fixedText = text
-  .split(/\r?\n/)
-  .map(line => {
-    const s = line.trim();
-    if (s.startsWith('"') && s.endsWith('"') && s.includes(",") && !s.includes('","')) {
-      return s.slice(1, -1);
-    }
-    return line;
-  })
-  .join("\n");
+  // Fix: some exports wrap EACH WHOLE ROW in quotes, making it a 1-column CSV.
+  // If a line starts/ends with a quote and does NOT contain '","', strip the outer quotes.
+  const fixedText = text
+    .split(/\r?\n/)
+    .map(line => {
+      const s = line.trim();
+      if (s.startsWith('"') && s.endsWith('"') && s.includes(",") && !s.includes('","')) {
+        return s.slice(1, -1);
+      }
+      return line;
+    })
+    .join("\n");
 
-return parseCSV(fixedText);
+  return parseCSV(fixedText);
 }
 
 function parseCSV(text) {
@@ -43,10 +43,24 @@ function parseCSV(text) {
       if (c === "\r" && next === "\n") i++;
       continue;
     }
-       
+
+    cell += c;
+  }
+
+  if (cell.length || row.length) { row.push(cell); rows.push(row); }
+
+  const rawHeaders = (rows.shift() || []);
+  const headers = rawHeaders.map(h => String(h).replace(/^\uFEFF/, "").trim());
+
+  return rows
+    .filter(r => r.length && r.some(x => String(x).trim() !== ""))
+    .map(r => Object.fromEntries(headers.map((h, idx) => [h, String(r[idx] ?? "").trim()])));
+}
+
 function qs(name) {
   return new URLSearchParams(location.search).get(name);
 }
+
 // ===== Ask logic for runner.html =====
 window.askQuestion = function(question) {
   const el = document.getElementById("askAnswer");
@@ -61,7 +75,12 @@ window.askQuestion = function(question) {
   let answer = "";
 
   // 1) Distance conversion: 1m 4f
-  if (q.includes("modern distance") || q.includes("1 mile 4 furlongs") || q.includes("1m 4f") || q.includes("1m4f")) {
+  if (
+    q.includes("modern distance") ||
+    q.includes("1 mile 4 furlongs") ||
+    q.includes("1m 4f") ||
+    q.includes("1m4f")
+  ) {
     answer = `
 1 mile 4 furlongs is approximately 2.4 kilometres.
 
@@ -76,7 +95,7 @@ or a brisk 25–30 minute walk.
     `.trim();
   }
 
-  // 2) Dam's sire explanation (with your improved nuance)
+  // 2) Dam's sire explanation
   else if (q.includes("dam's sire") || q.includes("dams sire") || q.includes("maternal grandfather")) {
     answer = `
 The dam (mother) may not have raced, and in many cases may never have raced.
