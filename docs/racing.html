@@ -98,7 +98,8 @@ document.getElementById("raceTitle").textContent =
 
   document.getElementById("runners").innerHTML = runners.map(r =>
     `<a class="card" href="./runner.html?race_no=${encodeURIComponent(r.race_no)}&horse_no=${encodeURIComponent(r.horse_no)}">
-      <div class="title">${r.horse_no}. ${r.horse_name}</div>
+      <div class="horse-title">...</div>
+      
       .card .sub {
   font-size: 1.03rem;
   margin-top: 4px;
