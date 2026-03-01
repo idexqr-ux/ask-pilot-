@@ -11,12 +11,15 @@
   <p style="padding:10px;background:#fff;border:1px solid #ccc;">TEST: racing.html is loading</p>  
  <a class="back" href="./index.html">← Back to Race Card</a>
  <h1 id="raceTitle">Race</h1>
+    <p id="probe" class="hint">JS probe: waiting…</p>
 <p class="hint">Tap a runner to explore their details and Ask deeper questions.</p>
 <div id="runners"></div>
  <p class="hint">Not sure what a code means? Legends explains form codes, weights, and abbreviations.</p>   
 <p><a class="back" href="./legends.html">Racing Legends & Codes</a></p>
   </div>
 <script>
+document.getElementById("probe").textContent = "JS probe: running ✅";
+document.getElementById("raceTitle").textContent = "Race (script running ✅)";
 function qs(name) {
   return new URLSearchParams(location.search).get(name);
 }
