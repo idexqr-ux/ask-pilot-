@@ -242,12 +242,20 @@ a.card:active {
   opacity: 0.92;
 }
 
-/* Make list cards easier to scan */
-.card .title {
+/* Horse heading on race list cards */
+.horse-title {
   font-size: 1.15rem;
   font-weight: 650;
   line-height: 1.2;
   letter-spacing: 0.2px;
+  margin-bottom: 4px;
+}
+
+/* Small section label e.g. "Ask" inside cards */
+.title {
+  font-weight: 600;
+  color: var(--muted);
+  margin-bottom: 10px;
 }
 
 .card .sub {
