@@ -43,7 +43,34 @@ function parseCSV(text) {
       if (c === "\r" && next === "\n") i++;
       continue;
     }
+if (question.includes("modern distance") || question.includes("1 mile 4 furlongs")) {
+  answer = `
+  1 mile 4 furlongs is approximately 2.4 kilometres.
 
+  1 mile equals 1.609 km.
+  1 furlong equals 201 metres.
+  Four furlongs add roughly 804 metres.
+
+  Together, that makes just over 2.4 km.
+
+  For context, that’s around a steady 12–15 minute jog for many recreational runners, 
+  or a brisk 25–30 minute walk.
+  `;
+}
+
+else if (question.includes("dam's sire") || question.includes("maternal grandfather")) {
+  answer = `
+  The dam (mother) may not have raced, and in many cases may never have raced.
+
+  The dam’s sire — the maternal grandfather — was usually a proven racehorse.
+
+  Traits such as stamina, speed tendencies, physical type, and temperament 
+  can influence performance across generations.
+
+  Listing the dam’s sire provides deeper insight into inherited characteristics,
+  especially when the dam herself may never have raced.
+  `;
+}
     cell += c;
   }
 
