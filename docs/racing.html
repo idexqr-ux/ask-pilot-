@@ -25,92 +25,99 @@ function parseCSV(text) {
   const lines = text.split(/\r?\n/).filter(l => l.trim().length);
   if (!lines.length) return [];
 
-  const splitLine = (line) => {
-    const out = [];
-    let cur = "";
-    let inQ = false;
-    for (let i = 0; i < line.length; i++) {
-      const c = line[i];
-      const n = line[i + 1];
-      if (c === '"' && inQ && n === '"') { cur += '"'; i++; continue; }
-      if (c === '"') { inQ = !inQ; continue; }
-      if (c === ',' && !inQ) { out.push(cur); cur = ""; continue; }
-      cur += c;
-    }
-    out.push(cur);
-    return out.map(s => s.trim());
-  };
-
-  const rawHeaders = splitLine(lines[0]);
-  const headers = rawHeaders.map(h => String(h).replace(/^\uFEFF/, "").trim());
-
+  const headers = lines[0].split(",");
   return lines.slice(1).map(line => {
-    const cols = splitLine(line);
+    const cols = line.split(",");
     const obj = {};
-    headers.forEach((h, idx) => obj[h] = (cols[idx] ?? "").trim());
+    headers.forEach((h, i) => obj[h.trim()] = (cols[i] || "").trim());
     return obj;
   });
 }
 
 async function loadCSV(url) {
   const res = await fetch(url, { cache: "no-store" });
-  if (!res.ok) throw new Error(`CSV fetch failed: ${res.status}`);
-  return parseCSV(await res.text());
+  if (!res.ok) throw new Error("CSV fetch failed");
+  const text = await res.text();
+  return parseCSV(text);
 }
 
-(async () => {
+function format12h(raw) {
+  if (!raw) return "";
+  const [h, m] = raw.split(":").map(Number);
+  const suffix = h >= 12 ? "pm" : "am";
+  const hour12 = h % 12 || 12;
+  return hour12 + ":" + String(m).padStart(2,"0") + suffix;
+}
+
+(async function() {
   const raceNo = qs("race_no") || "1";
 
   const url = "https://idexqr-ux.github.io/ask-pilot-/gatecard.csv?x=" + Date.now();
   const data = await loadCSV(url);
 
-  const raceRows = data.filter(r => String(r.race_no) === String(raceNo));
+  const raceRows = data.filter(r => r.race_no === raceNo);
+  const runnersEl = document.getElementById("runners");
+  const titleEl = document.getElementById("raceTitle");
+
   if (!raceRows.length) {
-    document.getElementById("raceTitle").textContent = "Race not found";
-    document.getElementById("runners").innerHTML = `<div class="card">No rows matched race_no=${raceNo}.</div>`;
+    titleEl.textContent = "Race not found";
     return;
   }
 
-  const raceHeader = raceRows.find(r => !String(r.horse_no || "").trim());
-  const runners = raceRows
-    .filter(r => String(r.horse_no || "").trim())
-    .sort((a,b) => Number(a.horse_no) - Number(b.horse_no));
+  const raceHeader = raceRows.find(r => !r.horse_no);
+  const runners = raceRows.filter(r => r.horse_no);
 
-  const meeting = (raceHeader?.meeting_name || runners[0]?.meeting_name || "Meeting").trim();
-  const raceName = (raceHeader?.race_name || runners[0]?.race_name || "Race").trim();
+  const meeting = raceHeader?.meeting_name || runners[0]?.meeting_name || "Meeting";
+  const raceName = raceHeader?.race_name || runners[0]?.race_name || "Race";
+  const time = format12h(raceHeader?.race_time || runners[0]?.race_time || "");
 
-  const rawTime = (raceHeader?.race_time || runners[0]?.race_time || "").trim();
-  let displayTime = "";
-  if (rawTime) {
-    const [hours, minutes] = rawTime.split(":").map(Number);
-    const suffix = hours >= 12 ? "pm" : "am";
-    const hour12 = hours % 12 || 12;
-    displayTime = `${hour12}:${String(minutes).padStart(2,"0")}${suffix}`;
-  }
+  titleEl.textContent =
+    meeting + " — Race " + raceNo +
+    (time ? " (" + time + ")" : "") +
+    ": " + raceName;
 
-  document.getElementById("raceTitle").textContent =
-    `${meeting} — Race ${raceNo}${displayTime ? " (" + displayTime + ")" : ""}: ${raceName}`;
+  runnersEl.innerHTML = "";
 
- document.getElementById("runners").innerHTML = runners.map(r => {
-  const silks = (r.silks_img || "").trim();
+  runners.forEach(r => {
+    const card = document.createElement("a");
+    card.className = "card";
+    card.href = "./runner.html?race_no=" + r.race_no + "&horse_no=" + r.horse_no;
 
-  const imgHTML = silks
-    ? '<img class="silks" src="./' + encodeURI(silks) + '" alt="Racing colours" />'
-    : "";
+    const rowTop = document.createElement("div");
+    rowTop.className = "row-top";
 
-  return `<a class="card" href="./runner.html?race_no=${encodeURIComponent(r.race_no)}&horse_no=${encodeURIComponent(r.horse_no)}">
-    <div class="row-top">
-      ${imgHTML}
-      <div class="title">${r.horse_no}. ${r.horse_name}</div>
-    </div>
-    <div class="sub"><strong>T:</strong> ${r.trainer_name}</div>
-    <div class="sub"><strong>J:</strong> ${r.jockey_name}</div>
-    <div class="muted-line">${r.weight_stone}st ${r.weight_pounds}lb</div>
-  </a>`;
-}).join("") || `<div class="card">No runners found for this race.</div>`;
-      
-    </a>`
-  ).join("") || `<div class="card">No runners found for this race.</div>`;
+    if (r.silks_img) {
+      const img = document.createElement("img");
+      img.className = "silks";
+      img.src = "./" + r.silks_img;
+      img.alt = "Racing colours";
+      rowTop.appendChild(img);
+    }
+
+    const title = document.createElement("div");
+    title.className = "title";
+    title.textContent = r.horse_no + ". " + r.horse_name;
+    rowTop.appendChild(title);
+
+    const t = document.createElement("div");
+    t.className = "sub";
+    t.innerHTML = "<strong>T:</strong> " + r.trainer_name;
+
+    const j = document.createElement("div");
+    j.className = "sub";
+    j.innerHTML = "<strong>J:</strong> " + r.jockey_name;
+
+    const w = document.createElement("div");
+    w.className = "muted-line";
+    w.textContent = r.weight_stone + "st " + r.weight_pounds + "lb";
+
+    card.appendChild(rowTop);
+    card.appendChild(t);
+    card.appendChild(j);
+    card.appendChild(w);
+
+    runnersEl.appendChild(card);
+  });
 })();
 </script>
  
