@@ -262,11 +262,11 @@ a.card:active {
 
 /* Horse heading on race list cards */
 .horse-title {
-  font-size: 1.28rem;
+  font-size: 1.38rem;
   font-weight: 700;
-  line-height: 1.2;
+  line-height: 1.18;
   letter-spacing: 0.3px;
-  margin-bottom: 6px;
+  margin-bottom: 8px;
 }
 
 /* Small section label e.g. "Ask" inside cards */
