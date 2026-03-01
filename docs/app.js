@@ -65,7 +65,21 @@ function qs(name) {
 window.askQuestion = function(question) {
   const el = document.getElementById("askAnswer");
   if (!el) return;
+else if (q.includes("form") || q.includes("form code") || q === "pf" || q === "p" || q === "f") {
+  answer = `
+Form code is a shorthand summary of how a horse finished in recent runs.
 
+Common examples:
+P = Pulled up (did not finish)
+F = Fell
+U = Unseated rider
+R = Refused
+B = Brought down
+RO = Ran out
+
+So “PF” means: Pulled up, then fell.
+  `.trim();
+}
   const q = String(question || "").trim().toLowerCase();
   if (!q) {
     el.textContent = "Type a question, or tap one of the prompts above.";
