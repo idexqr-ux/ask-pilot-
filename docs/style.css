@@ -251,19 +251,32 @@ h1 {
   gap: 12px;
 }
 
-.row-top .title{
-  flex: 1;                          /* lets the horse name take space */
+.row-top{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:12px;
 }
 
+/* ✅ Horse name inside row-top (dominant, left) */
+.row-top .title{
+  flex:1 1 auto;
+  min-width:0;
+  font-size:1.45rem;     /* phone readable */
+  line-height:1.18;
+  font-weight:700;
+  letter-spacing:0.2px;
+  margin:0;              /* stops extra bottom spacing */
+  color: var(--ink);     /* ensures it stays dark */
+  word-break:break-word;
+}
+
+/* ✅ Silks image (right) */
 .silks{
-  width: 52px;                      /* bigger, readable */
-  height: 52px;
-  object-fit: contain;
-  border-radius: 10px;
-  border: 1px solid var(--border);
-  background: #fff;
-  padding: 4px;                     /* gives the silks breathing room */
-  flex: 0 0 auto;
+  flex:0 0 auto;
+  width:110px;
+  height:auto;
+  display:block;
 }
 a.card {
   text-decoration: none;
@@ -296,11 +309,11 @@ a.card:active {
   margin-bottom: 8px;
 }
 
-/* Small section label e.g. "Ask" inside cards */
-.title {
-  font-weight: 600;
-  color: var(--muted);
-  margin-bottom: 10px;
+/* Small section label inside cards (NOT the horse name) */
+.card .section-title{
+  font-weight:600;
+  color:var(--muted);
+  margin-bottom:10px;
 }
 
 .card .sub {
