@@ -111,6 +111,20 @@ h1 {
   align-items: center;
   margin-top:12px;
 }
+.ask-input input {
+  flex: 1;
+  padding: 12px 14px;
+  font-size: 1.05rem;   /* slightly larger */
+  border-radius: 8px;
+  border: 1px solid var(--border);
+}
+
+.ask-input input::placeholder {
+  font-style: italic;
+  font-size: 1.05rem;
+  color: var(--muted);
+  letter-spacing: 0.2px;
+}
 
 .ask-answer {
   margin-top: 14px;
