@@ -80,9 +80,20 @@ async function loadCSV(url) {
 
   const meeting = (raceHeader?.meeting_name || runners[0]?.meeting_name || "Meeting").trim();
   const raceName = (raceHeader?.race_name || runners[0]?.race_name || "Race").trim();
+const rawTime = (raceHeader?.race_time || runners[0]?.race_time || "").trim();
 
-  document.getElementById("raceTitle").textContent =
-    `${meeting} — Race ${raceNo}: ${raceName}`;
+let displayTime = "";
+
+if (rawTime) {
+  const [hours, minutes] = rawTime.split(":").map(Number);
+  const suffix = hours >= 12 ? "pm" : "am";
+  const hour12 = hours % 12 || 12;
+  displayTime = `${hour12}:${String(minutes).padStart(2,"0")}${suffix}`;
+}
+
+document.getElementById("raceTitle").textContent =
+  `${meeting} — Race ${raceNo}${displayTime ? " (" + displayTime + ")" : ""}: ${raceName}`;
+  
 
   document.getElementById("runners").innerHTML = runners.map(r =>
     `<a class="card" href="./runner.html?race_no=${encodeURIComponent(r.race_no)}&horse_no=${encodeURIComponent(r.horse_no)}">
