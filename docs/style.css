@@ -280,7 +280,9 @@ details summary { cursor: pointer; margin-top: 10px; font-weight: 600; }
   }
 
   .ask-input button {
-    width: 100%;
+    width: 85%;
+    background-color: #B8C6C1;   /* keep celadon */
+    color: #2F2F2F;
   }
 }
 
