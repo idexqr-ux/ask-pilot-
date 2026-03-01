@@ -11,7 +11,28 @@
     <a id="backLink" class="back" href="./racing.html">← Back</a>
 <h1 id="name">Runner</h1>
 <div id="meta" class="card"></div>
-<div id="notes" class="card"></div>
+<div id="notes" class="card">
+  <div class="title">Ask</div>
+
+  <div class="ask-prompts">
+    <button type="button" onclick="askQuestion('What modern distance is 1 mile 4 furlongs?')">
+      What modern distance is 1 mile 4 furlongs?
+    </button>
+
+    <button type="button" onclick="askQuestion('Why is the dam\\'s sire listed?')">
+      Why is the dam's sire listed?
+    </button>
+  </div>
+
+  <div class="ask-input">
+    <input id="askInput" type="text" placeholder="Type a question…" />
+    <button type="button" onclick="askQuestion(document.getElementById('askInput').value)">
+      Ask
+    </button>
+  </div>
+
+  <div id="askAnswer" class="ask-answer">Choose a question above, or type your own.</div>
+</div>
   </div>
 
   <script src="./app.js"></script>
