@@ -359,11 +359,9 @@ details summary { cursor: pointer; margin-top: 10px; font-weight: 600; }
   color: var(--muted);
 }
 /* Desktop tweaks */
-@media (max-width: 480px) {
-  .ask-input {
-    flex-direction: column;
-    align-items: stretch;
-  }
+@media (max-width: 380px){
+  .silks{ width: 46px; height: 46px; }
+}
 
   .ask-input button {
     width: 85%;
