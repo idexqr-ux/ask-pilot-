@@ -71,6 +71,13 @@ h1 {
 }
 .ask-details { text-align: center; }
 
+.ask-title {
+  font-weight: 600;
+  color: var(--muted);
+  margin-bottom: 10px;
+  letter-spacing: 0.2px;
+}
+
 .ask-prompts {
   display: grid;
   gap: 10px;
