@@ -83,11 +83,10 @@ self.addEventListener("fetch", (event) => {
         .then((fresh) => {
           cache.put(req, fresh.clone());
           return fresh;
-        })
-        .catch(() => cached);
+             })
+      .catch(err => {
+        titleEl.textContent = "Race (couldn’t load data)";
+        runnersEl.textContent = "Error: " + (err?.message || err);
+      });
 
-      // Serve cached immediately if present, update in background
-      return cached || fetchAndUpdate;
-    })()
-  );
-});
+})();
