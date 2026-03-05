@@ -39,16 +39,62 @@
   }
 
   function parseCSV(text) {
-    const lines = text.split(/\r?\n/).filter(l => l.trim().length);
-    if (!lines.length) return [];
-    const headers = lines[0].split(",");
-    return lines.slice(1).map(line => {
-      const cols = line.split(",");
-      const obj = {};
-      headers.forEach((h, i) => (obj[h.trim()] = (cols[i] || "").trim()));
-      return obj;
-    });
+  const rows = [];
+  let row = [];
+  let cell = "";
+  let inQuotes = false;
+
+  // Normalize line endings
+  text = text.replace(/\r\n/g, "\n").replace(/\r/g, "\n");
+
+  for (let i = 0; i < text.length; i++) {
+    const ch = text[i];
+    const next = text[i + 1];
+
+    if (ch === '"') {
+      // Escaped quote inside quoted field: "" -> "
+      if (inQuotes && next === '"') {
+        cell += '"';
+        i++;
+      } else {
+        inQuotes = !inQuotes;
+      }
+      continue;
+    }
+
+    if (ch === "," && !inQuotes) {
+      row.push(cell.trim());
+      cell = "";
+      continue;
+    }
+
+    if (ch === "\n" && !inQuotes) {
+      row.push(cell.trim());
+      cell = "";
+      // ignore totally empty rows
+      if (row.some(v => v.length)) rows.push(row);
+      row = [];
+      continue;
+    }
+
+    cell += ch;
   }
+
+  // last cell
+  if (cell.length || row.length) {
+    row.push(cell.trim());
+    if (row.some(v => v.length)) rows.push(row);
+  }
+
+  if (!rows.length) return [];
+
+  const headers = rows[0].map(h => h.trim());
+  return rows.slice(1).map(cols => {
+    const obj = {};
+    headers.forEach((h, idx) => (obj[h] = (cols[idx] ?? "").trim()));
+    return obj;
+  });
+}
 
   async function loadCSV(url) {
     const res = await fetch(url, { cache: "no-store" });
