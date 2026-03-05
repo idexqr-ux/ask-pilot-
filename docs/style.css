@@ -336,6 +336,38 @@ a.card:active {
   font-weight: 600;
   color: var(--muted);
 }
+/* --- Runner row-top layout (horse left, silks right) --- */
+.row-top{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:12px;
+}
+
+/* Use a dedicated class so it NEVER fights with .title elsewhere */
+.runner-title{
+  flex:1 1 auto;
+  min-width:0;
+  font-size:1.45rem;
+  font-weight:700;
+  line-height:1.18;
+  color:var(--ink);
+  margin:0 0 8px 0;
+  word-break:break-word;
+}
+
+.silks{
+  flex:0 0 auto;
+  width:110px;
+  height:auto;
+  display:block;
+}
+
+/* Very small phones: keep silks readable, not tiny */
+@media (max-width: 380px){
+  .silks{ width: 84px; height:auto; }
+  .runner-title{ font-size:1.32rem; }
+}
 
 .card-summary::-webkit-details-marker { display: none; }
 
