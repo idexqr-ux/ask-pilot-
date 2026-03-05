@@ -95,21 +95,37 @@ async function loadCSV(url) {
 function format12h(raw) {
   if (!raw) return "";
 
-  // Keep only digits and colon (handles "13:00", "13.00", "1300", "13:00 ")
-  const cleaned = String(raw).trim().replace(/[^\d:]/g, "").replace(".", ":");
+  const s = String(raw).trim().toLowerCase();
 
-  let h, m;
+  // If the CSV already contains am/pm, respect it.
+  const hasAm = s.includes("am");
+  const hasPm = s.includes("pm");
 
-  // If it's like "1300" (no colon)
-  if (/^\d{3,4}$/.test(cleaned)) {
-    const s = cleaned.padStart(4, "0");
-    h = Number(s.slice(0, 2));
-    m = Number(s.slice(2, 4));
-  } else {
-    const parts = cleaned.split(":");
-    h = Number(parts[0]);
-    m = Number(parts[1]);
+  // Extract time like 1:45 or 13:45 (ignore other characters)
+  const m = s.match(/(\d{1,2})\s*[:.]\s*(\d{2})/);
+  if (!m) return "";
+
+  let h = Number(m[1]);
+  const mins = Number(m[2]);
+  if (!Number.isFinite(h) || !Number.isFinite(mins) || mins < 0 || mins > 59) return "";
+
+  // 24-hour input (e.g. 13:45)
+  if (h >= 13 && h <= 23) {
+    const hour12 = h % 12;
+    return `${hour12}:${String(mins).padStart(2, "0")}pm`;
   }
+  if (h === 0) return `12:${String(mins).padStart(2, "0")}am`;
+  if (h === 12) return `12:${String(mins).padStart(2, "0")}${hasAm ? "am" : "pm"}`;
+
+  // Ambiguous 1–11: if no suffix given, assume PM (race-day default)
+  if (!hasAm && !hasPm) {
+    return `${h}:${String(mins).padStart(2, "0")}pm`;
+  }
+
+  // If suffix is provided, use it
+  const suffix = hasPm ? "pm" : "am";
+  return `${h}:${String(mins).padStart(2, "0")}${suffix}`;
+}
 
   if (!Number.isFinite(h) || !Number.isFinite(m) || m < 0 || m > 59 || h < 0 || h > 23) {
     return ""; // fail quietly = no time shown
