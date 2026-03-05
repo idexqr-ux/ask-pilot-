@@ -169,7 +169,9 @@ function format12h(raw) {
 
       const w = document.createElement("div");
       w.className = "muted-line";
-      w.textContent = r.weight_stone + "st " + r.weight_pounds + "lb";
+     const st = (r.weight_stone || "").trim();
+const lb = (r.weight_pounds || "").trim();
+w.textContent = (st || lb) ? `${st}st ${lb}lb` : "";
 
       card.appendChild(rowTop);
       card.appendChild(t);
