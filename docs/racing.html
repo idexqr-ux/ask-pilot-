@@ -25,14 +25,21 @@
   const probeEl = document.getElementById("probe");
   if (probeEl) probeEl.textContent = "JS probe: running ✅";
 
-  window.addEventListener("error", (e) => {
+  loadCSV(localUrl)
+  .then(data => {
     const p = document.getElementById("probe");
-    if (p) p.textContent = "JS error ❌ " + (e?.message || e);
-  });
-  window.addEventListener("unhandledrejection", (e) => {
+    if (p) p.textContent = "JS probe: running ✅ (data: local)";
+    return data;
+  })
+  .catch(() => loadCSV(remoteUrl).then(data => {
     const p = document.getElementById("probe");
-    if (p) p.textContent = "Promise error ❌ " + (e?.reason?.message || e?.reason || e);
-  });
+    if (p) p.textContent = "JS probe: running ✅ (data: remote)";
+    return data;
+  }))
+  .then(data => {
+    // render...
+  })
+  .catch(err => { /* show error */ });
 
   function qs(name) {
     return new URLSearchParams(location.search).get(name);
@@ -120,11 +127,18 @@
 
     runnersEl.textContent = "Loading…";
 
-    const url = "https://idexqr-ux.github.io/ask-pilot-/gatecard.csv?x=" + Date.now();
+    const localUrl  = "./gatecard.csv?x=" + Date.now();
+const remoteUrl = "https://idexqr-ux.github.io/ask-pilot-/gatecard.csv?x=" + Date.now();
 
-    loadCSV(url)
-      .then(data => {
-        const raceRows = data.filter(r => r.race_no === raceNo);
+loadCSV(localUrl)
+  .catch(() => loadCSV(remoteUrl))
+  .then(data => {
+    // ✅ your existing code that filters raceRows and renders runners goes here
+  })
+  .catch(err => {
+    titleEl.textContent = "Race (couldn’t load data)";
+    runnersEl.textContent = "Error: " + (err?.message || err);
+  });
 
         if (!raceRows.length) {
           titleEl.textContent = "Race not found";
