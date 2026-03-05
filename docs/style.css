@@ -302,19 +302,6 @@ a.card:active {
   letter-spacing: 0.3px;
   margin-bottom: 8px;
 }
-#runners .title {
-  font-size: 1.45rem;
-  font-weight: 700;
-  line-height: 1.18;
-  margin-bottom: 8px;
-}
-
-/* Small section label inside cards (NOT the horse name) */
-.card .section-title{
-  font-weight:600;
-  color:var(--muted);
-  margin-bottom:10px;
-}
 
 .card .sub {
   font-size: 1.03rem;
@@ -405,11 +392,13 @@ details summary { cursor: pointer; margin-top: 10px; font-weight: 600; }
 }
 /* Desktop tweaks */
 @media (max-width: 380px){
-  .silks{ width: 72px; height: auto; }  /* still readable, not tiny */
-  .ask-input button{
-    width: 85%;
-    align-self: center;
-  }
+  .silks{ width: 84px; height: auto; }
+}
+
+/* Keep this OUTSIDE the media query unless you truly want it only on tiny screens */
+.ask-input button {
+  width: 85%;
+  align-self: center;
 }
 
 
