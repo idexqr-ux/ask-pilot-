@@ -94,10 +94,30 @@ async function loadCSV(url) {
 
 function format12h(raw) {
   if (!raw) return "";
-  const [h, m] = raw.split(":").map(Number);
+
+  // Keep only digits and colon (handles "13:00", "13.00", "1300", "13:00 ")
+  const cleaned = String(raw).trim().replace(/[^\d:]/g, "").replace(".", ":");
+
+  let h, m;
+
+  // If it's like "1300" (no colon)
+  if (/^\d{3,4}$/.test(cleaned)) {
+    const s = cleaned.padStart(4, "0");
+    h = Number(s.slice(0, 2));
+    m = Number(s.slice(2, 4));
+  } else {
+    const parts = cleaned.split(":");
+    h = Number(parts[0]);
+    m = Number(parts[1]);
+  }
+
+  if (!Number.isFinite(h) || !Number.isFinite(m) || m < 0 || m > 59 || h < 0 || h > 23) {
+    return ""; // fail quietly = no time shown
+  }
+
   const suffix = h >= 12 ? "pm" : "am";
   const hour12 = h % 12 || 12;
-  return hour12 + ":" + String(m).padStart(2, "0") + suffix;
+  return `${hour12}:${String(m).padStart(2, "0")}${suffix}`;
 }
 
 (async function () {
