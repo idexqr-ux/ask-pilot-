@@ -270,13 +270,18 @@ a.card:active {
   margin-bottom: 8px;
 }
 
-.card .sub {
-  font-size: 1.03rem;
-  line-height: 1.35;
-  margin-top: 6px;
-  color: var(--muted);
+./* Tighten card spacing without affecting Ask UI elsewhere */
+.card .sub{
+  margin: 6px 0 0;   /* was 0 0 14px */
 }
 
+.card .muted-line{
+  margin-top: 6px;   /* was 10px */
+}
+
+.runner-title{
+  margin: 0 0 4px 0; /* was 8px */
+}
 /* Give the card a bit more breathing room */
 .card {
   padding: 16px;
