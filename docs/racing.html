@@ -144,11 +144,18 @@ function format12h(raw) {
 
   runnersEl.textContent = "Loading…";
 
-  const url = "./gatecard.csv?x=" + Date.now();
+const localUrl = "./gatecard.csv?x=" + Date.now();
+const remoteUrl = "https://idexqr-ux.github.io/ask-pilot-/gatecard.csv?x=" + Date.now();
+
+try {
+
+  let data;
 
   try {
-
-    const data = await loadCSV(url);
+    data = await loadCSV(localUrl);        // try local first
+  } catch {
+    data = await loadCSV(remoteUrl);       // fallback if local fails
+  }
 
     const raceRows = data.filter(r => r.race_no === raceNo);
 
