@@ -32,14 +32,29 @@ function parseCSV(text) {
     const c = text[i];
     const next = text[i + 1];
 
-    if (c === '"' && inQuotes && next === '"') { cell += '"'; i++; continue; }
-    if (c === '"') { inQuotes = !inQuotes; continue; }
+    if (c === '"' && inQuotes && next === '"') {
+      cell += '"';
+      i++;
+      continue;
+    }
+    if (c === '"') {
+      inQuotes = !inQuotes;
+      continue;
+    }
 
-    if (c === delimiter && !inQuotes) { row.push(cell); cell = ""; continue; }
+    if (c === delimiter && !inQuotes) {
+      row.push(cell);
+      cell = "";
+      continue;
+    }
 
     if ((c === "\n" || c === "\r") && !inQuotes) {
-      if (cell.length || row.length) { row.push(cell); rows.push(row); }
-      cell = ""; row = [];
+      if (cell.length || row.length) {
+        row.push(cell);
+        rows.push(row);
+      }
+      cell = "";
+      row = [];
       if (c === "\r" && next === "\n") i++;
       continue;
     }
@@ -47,14 +62,21 @@ function parseCSV(text) {
     cell += c;
   }
 
-  if (cell.length || row.length) { row.push(cell); rows.push(row); }
+  if (cell.length || row.length) {
+    row.push(cell);
+    rows.push(row);
+  }
 
-  const rawHeaders = (rows.shift() || []);
+  const rawHeaders = rows.shift() || [];
   const headers = rawHeaders.map(h => String(h).replace(/^\uFEFF/, "").trim());
 
   return rows
     .filter(r => r.length && r.some(x => String(x).trim() !== ""))
-    .map(r => Object.fromEntries(headers.map((h, idx) => [h, String(r[idx] ?? "").trim()])));
+    .map(r =>
+      Object.fromEntries(
+        headers.map((h, idx) => [h, String(r[idx] ?? "").trim()])
+      )
+    );
 }
 
 function qs(name) {
@@ -75,7 +97,7 @@ function speakDynamicAnswer(text) {
 }
 
 // ===== Ask logic for runner.html =====
-window.askQuestion = function(question) {
+window.askQuestion = function (question) {
   const el = document.getElementById("askAnswer");
   if (!el) return;
 
@@ -94,15 +116,14 @@ window.askQuestion = function(question) {
     q.includes("1 mile 4 furlongs")
   ) {
     answer = "One mile and four furlongs is about 2.4 kilometres.";
-  }
-  else if (
+  } else if (
     q.includes("dam's sire") ||
     q.includes("dams sire") ||
     q.includes("why is the dam")
   ) {
-    answer = "The dam's sire is listed because it helps show the horse's breeding on the mother's side. People use it as part of the pedigree picture when thinking about stamina, speed, and suitability for different conditions.";
-  }
-  else if (
+    answer =
+      "The dam's sire is listed because it helps show the horse's breeding on the mother's side. People use it as part of the pedigree picture when thinking about stamina, speed, and suitability for different conditions.";
+  } else if (
     q.includes("form") ||
     q.includes("form code") ||
     q === "pf" ||
@@ -119,9 +140,8 @@ R = Refused
 B = Brought down
 RO = Ran out
 
-So “PF” means: Pulled up, then fell.`;
-  }
-  else {
+So PF means: Pulled up, then fell.`;
+  } else {
     answer = "I do not have a stored answer for that question yet, but I can help you add one.";
   }
 
