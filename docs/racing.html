@@ -13,8 +13,16 @@
     <h1 id="raceTitle">Race</h1>
     <p id="probe" class="hint">JS probe: waiting…</p>
 
-    <p class="hint">Tap a runner to explore their details and Ask deeper questions.</p>
-    <div id="runners"></div>
+   <p class="hint">Tap a runner to explore their details and Ask deeper questions.</p>
+
+<p>
+  <button onclick="playAudio('audio/distance.mp3')">
+    Listen — I’ll explain the distance
+  </button>
+</p>
+
+<div id="runners"></div>
+</button>
 
     <p class="hint">Not sure what a code means? Legends explains form codes, weights, and abbreviations.</p>
     <p><a class="back" href="./legends.html">Racing Legends & Codes</a></p>
@@ -225,8 +233,7 @@ w.textContent = (st || lb) ? `${st}st ${lb}lb` : "";
 
 })();
   </script>
-    ...your page content...
-
+    
 <script>
 let currentAudio = null;
 
