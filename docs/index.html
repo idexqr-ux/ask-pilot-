@@ -298,7 +298,7 @@ function speakText(text) {
   speaking = true;
 }
 
-document.querySelectorAll('.listen-btn').forEach(btn => {
+document.querySelectorAll('.listen-btn[data-target]').forEach(btn => {
   btn.addEventListener('click', () => {
 
     if (speaking) {
