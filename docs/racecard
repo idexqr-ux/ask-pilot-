@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Race Card</title>
+  <link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+  <div class="wrap">
+    <a class="back" href="./index.html">← Back to Ask Pilot</a>
+
+    <h1 id="meetingTitle">Matchem Race Meeting</h1>
+    <p class="hint">Choose a race to view its runners, then tap a horse for more detail.</p>
+
+    <div id="racecard"></div>
+  </div>
+
+  <script>
+    function parseCSV(text) {
+      const rows = [];
+      let row = [];
+      let cell = "";
+      let inQuotes = false;
+
+      text = text.replace(/\r\n/g, "\n").replace(/\r/g, "\n");
+
+      for (let i = 0; i < text.length; i++) {
+        const ch = text[i];
+        const next = text[i + 1];
+
+        if (ch === '"') {
+          if (inQuotes && next === '"') {
+            cell += '"';
+            i++;
+          } else {
+            inQuotes = !inQuotes;
+          }
+          continue;
+        }
+
+        if (ch === "," && !inQuotes) {
+          row.push(cell.trim());
+          cell = "";
+          continue;
+        }
+
+        if (ch === "\n" && !inQuotes) {
+          row.push(cell.trim());
+          cell = "";
+          if (row.some(v => v.length)) rows.push(row);
+          row = [];
+          continue;
+        }
+
+        cell += ch;
+      }
+
+      if (cell.length || row.length) {
+        row.push(cell.trim());
+        if (row.some(v => v.length)) rows.push(row);
+      }
+
+      if (!rows.length) return [];
+
+      const headers = rows[0].map(h => h.trim());
+      return rows.slice(1).map(cols => {
+        const obj = {};
+        headers.forEach((h, idx) => {
+          obj[h] = (cols[idx] ?? "").trim();
+        });
+        return obj;
+      });
+    }
+
+    async function loadCSV(url) {
+      const res = await fetch(url, { cache: "no-store" });
+      if (!res.ok) throw new Error("CSV fetch failed: " + res.status);
+      return parseCSV(await res.text());
+    }
+
+    function format12h(raw) {
+      if (!raw) return "";
+
+      const s = String(raw).trim().toLowerCase();
+      const hasAm = s.includes("am");
+      const hasPm = s.includes("pm");
+      const m = s.match(/(\d{1,2})\s*[:.]\s*(\d{2})/);
+      if (!m) return "";
+
+      let h = Number(m[1]);
+      const mins = Number(m[2]);
+      if (!Number.isFinite(h) || !Number.isFinite(mins) || mins < 0 || mins > 59) return "";
+
+      if (h >= 13 && h <= 23) {
+        const hour12 = h % 12;
+        return `${hour12}:${String(mins).padStart(2, "0")}pm`;
+      }
+      if (h === 0) return `12:${String(mins).padStart(2, "0")}am`;
+      if (h === 12) return `12:${String(mins).padStart(2, "0")}${hasAm ? "am" : "pm"}`;
+
+      if (!hasAm && !hasPm) {
+        return `${h}:${String(mins).padStart(2, "0")}pm`;
+      }
+
+      const suffix = hasPm ? "pm" : "am";
+      return `${h}:${String(mins).padStart(2, "0")}${suffix}`;
+    }
+
+    (async function () {
+      const racecardEl = document.getElementById("racecard");
+      racecardEl.textContent = "Loading…";
+
+      const localUrl = "./gatecard.csv?x=" + Date.now();
+      const remoteUrl = "https://idexqr-ux.github.io/ask-pilot-/gatecard.csv?x=" + Date.now();
+
+      try {
+        let data;
+
+        try {
+          data = await loadCSV(localUrl);
+        } catch {
+          data = await loadCSV(remoteUrl);
+        }
+
+        const meetingName =
+          data.find(r => r.meeting_name && !r.horse_no)?.meeting_name ||
+          "Matchem Race Meeting";
+
+        document.getElementById("meetingTitle").textContent = meetingName;
+        racecardEl.innerHTML = "";
+
+        const raceNos = [...new Set(data.map(r => r.race_no).filter(Boolean))].sort((a, b) => Number(a) - Number(b));
+
+        raceNos.forEach(raceNo => {
+          const raceRows = data.filter(r => String(r.race_no) === String(raceNo));
+          const raceHeader = raceRows.find(r => !r.horse_no);
+          const runners = raceRows.filter(r => r.horse_no);
+
+          const section = document.createElement("section");
+          section.className = "card";
+
+          const title = document.createElement("h2");
+          const time = format12h(raceHeader?.race_time || "");
+          title.textContent =
+            `Race ${raceNo}` +
+            (time ? ` (${time})` : "") +
+            (raceHeader?.race_name ? ` — ${raceHeader.race_name}` : "");
+
+          section.appendChild(title);
+
+          runners.forEach(r => {
+            const card = document.createElement("a");
+            card.className = "card";
+            card.href = `./runner.html?race_no=${encodeURIComponent(r.race_no)}&horse_no=${encodeURIComponent(r.horse_no)}`;
+
+            const rowTop = document.createElement("div");
+            rowTop.className = "row-top";
+
+            const horseTitle = document.createElement("div");
+            horseTitle.className = "runner-title";
+            horseTitle.textContent = `${r.horse_no}. ${r.horse_name}`;
+            rowTop.appendChild(horseTitle);
+
+            if (r.silks_img) {
+              const img = document.createElement("img");
+              img.className = "silks";
+              img.src = "./" + r.silks_img;
+              img.alt = "Racing colours";
+              rowTop.appendChild(img);
+            }
+
+            const trainer = document.createElement("div");
+            trainer.className = "sub";
+            trainer.innerHTML = `<strong>T:</strong> ${r.trainer_name || "—"}`;
+
+            const jockey = document.createElement("div");
+            jockey.className = "sub";
+            jockey.innerHTML = `<strong>J:</strong> ${r.jockey_name || "—"}`;
+
+            const weight = document.createElement("div");
+            weight.className = "muted-line";
+            const st = (r.weight_stone || "").trim();
+            const lb = (r.weight_pounds || "").trim();
+            weight.textContent = (st || lb) ? `${st}st ${lb}lb` : "";
+
+            card.appendChild(rowTop);
+            card.appendChild(trainer);
+            card.appendChild(jockey);
+            card.appendChild(weight);
+
+            section.appendChild(card);
+          });
+
+          racecardEl.appendChild(section);
+        });
+      } catch (err) {
+        racecardEl.textContent = "Error: " + err.message;
+      }
+    })();
+  </script>
+</body>
+</html>
