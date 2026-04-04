@@ -43,7 +43,6 @@
         <a class="chip" href="#what-happened">What happened to this work?</a>
         <a class="chip" href="#sensory">What would they feel like?</a>
         <a class="chip" href="#bridge">What does it mean now?</a>
-        <a class="card" href="./racing.html?race_no=1">Race 1</a>
       </nav>
 
       <p class="muted-line">Or scroll to browse below.</p>
@@ -230,6 +229,19 @@
       </details>
     </section>
 
+    <!-- Race Card Demo -->
+    <section class="ask-card">
+      <p class="kicker">Race Card Demo</p>
+      <h2>Matchem Race Meeting</h2>
+      <p>Choose a race to explore the card, then tap a runner for more detail.</p>
+
+      <div class="listen-group">
+        <a class="quiet-button" href="./racing.html?race_no=1">Race 1 — Golden Stirrup</a>
+        <a class="quiet-button" href="./racing.html?race_no=2">Race 2</a>
+        <a class="quiet-button" href="./racing.html?race_no=3">Race 3</a>
+      </div>
+    </section>
+
     <footer class="footer">
       <p><small>Ask Pilot — calm, spoken-first, visitor-choice.</small></p>
     </footer>
@@ -342,55 +354,56 @@
       navigator.serviceWorker.register("./service-worker.js");
     }
   </script>
+
   <section class="ask-card">
-  <p class="kicker">Know before you go</p>
-  <h2>Spring Home and Living Show</h2>
-  <p>
-    National Exhibition Centre, Birmingham<br>
-    Saturday 12 April · Doors open 10:00
-  </p>
+    <p class="kicker">Know before you go</p>
+    <h2>Spring Home and Living Show</h2>
+    <p>
+      National Exhibition Centre, Birmingham<br>
+      Saturday 12 April · Doors open 10:00
+    </p>
 
-  <p>
-    Yellow Car Park · Shuttle bus to main entrance
-  </p>
+    <p>
+      Yellow Car Park · Shuttle bus to main entrance
+    </p>
 
-  <p>
-    Hall 3 · Block B · Row 12<br>
-    Just to the right as you enter the hall
-  </p>
+    <p>
+      Hall 3 · Block B · Row 12<br>
+      Just to the right as you enter the hall
+    </p>
 
-  <p>
-    <a href="https://www.google.com/maps/search/?api=1&query=National+Exhibition+Centre+Birmingham" target="_blank" rel="noopener">
-      Open directions in Google Maps
-    </a>
-  </p>
+    <p>
+      <a href="https://www.google.com/maps/search/?api=1&query=National+Exhibition+Centre+Birmingham" target="_blank" rel="noopener">
+        Open directions in Google Maps
+      </a>
+    </p>
 
-  <audio id="knowBeforeAudio" src="audio/know-before-you-go.mp3"></audio>
-  <audio id="directionsAudio" src="audio/directions.mp3"></audio>
-  <audio id="parkingAudio" src="audio/parking.mp3"></audio>
-  <audio id="leavingAudio" src="audio/leaving.mp3"></audio>
+    <audio id="knowBeforeAudio" src="audio/know-before-you-go.mp3"></audio>
+    <audio id="directionsAudio" src="audio/directions.mp3"></audio>
+    <audio id="parkingAudio" src="audio/parking.mp3"></audio>
+    <audio id="leavingAudio" src="audio/leaving.mp3"></audio>
 
-  <div class="listen-group">
-  <button class="quiet-button" onclick="playEmbeddedAudio('knowBeforeAudio')">Listen — know before you go</button>
-  <button class="quiet-button" onclick="playEmbeddedAudio('directionsAudio')">Listen — directions</button>
-  <button class="quiet-button" onclick="playEmbeddedAudio('parkingAudio')">Listen — parking</button>
-  <button class="quiet-button" onclick="playEmbeddedAudio('leavingAudio')">Listen — leaving</button>
-</div>
-</section>
+    <div class="listen-group">
+      <button class="quiet-button" onclick="playEmbeddedAudio('knowBeforeAudio')">Listen — know before you go</button>
+      <button class="quiet-button" onclick="playEmbeddedAudio('directionsAudio')">Listen — directions</button>
+      <button class="quiet-button" onclick="playEmbeddedAudio('parkingAudio')">Listen — parking</button>
+      <button class="quiet-button" onclick="playEmbeddedAudio('leavingAudio')">Listen — leaving</button>
+    </div>
+  </section>
 
-<script>
-  function playEmbeddedAudio(id) {
-    const audios = document.querySelectorAll('audio');
-    audios.forEach(audio => {
-      audio.pause();
-      audio.currentTime = 0;
-    });
+  <script>
+    function playEmbeddedAudio(id) {
+      const audios = document.querySelectorAll('audio');
+      audios.forEach(audio => {
+        audio.pause();
+        audio.currentTime = 0;
+      });
 
-    const selectedAudio = document.getElementById(id);
-    if (selectedAudio) {
-      selectedAudio.play();
+      const selectedAudio = document.getElementById(id);
+      if (selectedAudio) {
+        selectedAudio.play();
+      }
     }
-  }
-</script>
+  </script>
 </body>
 </html>
