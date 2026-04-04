@@ -373,5 +373,32 @@ details summary { cursor: pointer; margin-top: 10px; font-weight: 600; }
   width: 85%;
   align-self: center;
 }
+.ask-card {
+  background: #F7F9F8;
+  border: 1px solid #D9E2DE;
+  border-radius: 16px;
+  padding: 1.25rem;
+  margin: 2rem 0;
+}
 
+.listen-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.quiet-button {
+  background: #FFFFFF;
+  border: 1px solid #B8C6C1;
+  border-radius: 999px;
+  padding: 0.7rem 1rem;
+  font: inherit;
+  color: #2b2b2b;
+  cursor: pointer;
+}
+
+.quiet-button:hover {
+  background: #F3F5F4;
+}
 
