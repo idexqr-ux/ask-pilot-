@@ -25,9 +25,9 @@
     <p class="browse-label">What would you like help with?</p>
 
     <div class="chips">
-      <button class="quiet-button" onclick="show('coffee')">Make a coffee</button>
-      <button class="quiet-button" onclick="show('water')">Refill the water</button>
-      <button class="quiet-button" onclick="show('pods')">Empty used pods</button>
+      <button onclick="show('coffee')">Make a coffee</button>
+      <button onclick="show('water')">Refill the water</button>
+      <button onclick="show('pods')">Empty used pods</button>
     </div>
 
     <section id="coffee" class="card" hidden>
@@ -98,10 +98,8 @@
     let currentAudio = null;
 
     function show(id) {
-      document.querySelectorAll('.card').forEach(el => {
-        if (el.id === 'coffee' || el.id === 'water' || el.id === 'pods') {
-          el.hidden = true;
-        }
+      ["coffee", "water", "pods"].forEach(sectionId => {
+        document.getElementById(sectionId).hidden = true;
       });
       document.getElementById(id).hidden = false;
     }
