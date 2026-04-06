@@ -19,9 +19,9 @@
     <p class="hint">You can listen or read — whichever you prefer.</p>
 
     <p>
-      <button class="quiet-button" onclick="playEmbeddedAudio('knowBeforeAudio')">
-        Listen — know before you go
-      </button>
+      <button class="listen-btn" onclick="startGuidance()">
+  Start guidance
+</button>
     </p>
 
     <hr class="divider">
@@ -111,25 +111,33 @@
   </main>
 
   <script>
-    function show(id) {
-      ["overview", "directions", "parking", "leaving"].forEach(sectionId => {
-        document.getElementById(sectionId).hidden = true;
-      });
-      document.getElementById(id).hidden = false;
+  let currentAudio = null;
+  let guidanceStarted = false;
+
+  function playAudio(file) {
+    if (currentAudio) {
+      currentAudio.pause();
+      currentAudio.currentTime = 0;
     }
 
-    function playEmbeddedAudio(id) {
-      const audios = document.querySelectorAll('audio');
-      audios.forEach(audio => {
-        audio.pause();
-        audio.currentTime = 0;
-      });
+    currentAudio = new Audio(file);
+    currentAudio.preload = 'auto';
+    currentAudio.playsInline = true;
 
-      const selectedAudio = document.getElementById(id);
-      if (selectedAudio) {
-        selectedAudio.play();
-      }
-    }
-  </script>
+    currentAudio.play().catch(err => {
+      console.error("Audio failed:", file, err);
+    });
+  }
+
+  function startGuidance() {
+    if (guidanceStarted) return;
+    guidanceStarted = true;
+    playAudio('audio/know-before-you-go-v2.mp3');
+  }
+
+  document.addEventListener('touchstart', startGuidance, { once: true, passive: true });
+  document.addEventListener('pointerdown', startGuidance, { once: true });
+  document.addEventListener('click', startGuidance, { once: true });
+</script>
 </body>
 </html>
