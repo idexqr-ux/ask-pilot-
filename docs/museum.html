@@ -33,12 +33,12 @@
         <p><strong>You can listen or read.</strong> Tap a question to jump down the page.</p>
       </div>
 
-     <nav id="questions" class="chips" aria-label="Objects to explore">
-  <a class="chip" href="#gloves">Gloves</a>
-  <a class="chip" href="#needle">Needle</a>
-</nav>
+      <nav id="questions" class="chips" aria-label="Objects to explore">
+        <a class="chip" href="#gloves">Gloves</a>
+        <a class="chip" href="#needle">Needle</a>
+      </nav>
 
-    <p class="muted-line">Or scroll to explore the two objects below.</p>
+      <p class="muted-line">Or scroll to explore the two objects below.</p>
     </details>
 
     <p class="hint">Tap <strong>Ask</strong> to choose a question.</p>
@@ -69,6 +69,7 @@
 
         <h3>Who would have worn them?</h3>
         <p>People wore gloves like these for walking, visiting, church, and travel. They were practical, but also carried a quiet sense of care and refinement.</p>
+
         <h3>Why do they matter?</h3>
         <p>They show the quiet skill behind everyday life — not only the hands that wore them, but the hands that made them.</p>
 
@@ -89,12 +90,14 @@
     <section id="needle" class="card">
       <details class="card-details">
         <summary class="card-summary">Object 2 — Steel sewing needle (c. 1800–1850)</summary>
+
         <button class="listen-btn" onclick="playAudio('audio/needle.mp3')">
           Listen — I’ll guide you
         </button>
 
         <h3>What am I looking at?</h3>
         <p>In front of you is a steel sewing needle, made around 1800 to 1850. It is small, sharp, and easy to miss, with a tiny eye for thread. It fits easily between finger and thumb and would have been used thousands of times.</p>
+
         <h3>What is it made from?</h3>
         <p>Hardened steel, polished so it could pass smoothly through leather.</p>
 
@@ -112,13 +115,10 @@
           <button class="listen-btn" onclick="playAudio('audio/needle-short.mp3')">
             Listen — short version
           </button>
+
           <p>This needle was used repeatedly to stitch leather gloves by hand. It represents skilled, patient work done quietly at home.</p>
         </details>
 
-        <p class="back"><a href="#top">Back to top</a></p>
-      </details>
-    </section>
-   
         <p class="back"><a href="#top">Back to top</a></p>
       </details>
     </section>
@@ -163,6 +163,7 @@
 
   <script>
     let currentAudio = null;
+    let firstTapHandled = false;
 
     function playAudio(file) {
       if (currentAudio) {
@@ -174,71 +175,70 @@
         console.error("Audio failed to play:", file, err);
       });
     }
-<script>
-  let currentAudio = null;
 
-  function playAudio(file) {
-    if (currentAudio) {
-      currentAudio.pause();
-      currentAudio.currentTime = 0;
-    }
-    currentAudio = new Audio(file);
-    currentAudio.play().catch(err => {
-      console.error("Audio failed to play:", file, err);
+    // Try to play arrival audio on page load
+    // This may be blocked on iPad/iPhone until the user taps
+    window.addEventListener('load', () => {
+      playAudio('audio/arrival.mp3');
     });
-  }
-</script>
 
-<script>
-  function normaliseForSpeech(text) {
-    return text
-      .replace(/\bc\.\s*/gi, 'circa ')
-      .replace(/\b(1[5-9]\d{2})\b/g, (match) => {
-        const year = parseInt(match, 10);
-        const century = Math.floor(year / 100);
-        const lastTwo = year % 100;
+    // First tap anywhere plays the first guidance audio
+    document.addEventListener('click', () => {
+      if (firstTapHandled) return;
+      firstTapHandled = true;
+      playAudio('audio/first-tap-response.mp3');
+    }, { once: true });
 
-        const centuryWord = {
-          15: "fifteen",
-          16: "sixteen",
-          17: "seventeen",
-          18: "eighteen",
-          19: "nineteen"
-        }[century] || String(century);
+    function normaliseForSpeech(text) {
+      return text
+        .replace(/\bc\.\s*/gi, 'circa ')
+        .replace(/\b(1[5-9]\d{2})\b/g, (match) => {
+          const year = parseInt(match, 10);
+          const century = Math.floor(year / 100);
+          const lastTwo = year % 100;
 
-        if (lastTwo === 0) return `${centuryWord} hundred`;
-        if (lastTwo < 10) return `${centuryWord} oh ${lastTwo}`;
-        return `${centuryWord} ${lastTwo}`;
-      })
-      .replace(/\bYou are looking at\s+/gi, 'In front of you is ')
-      .replace(/\bIt represents\s+/gi, 'This object represents ')
-      .replace(/\bThey show\s+/gi, 'These objects show ')
-      .replace(/–/g, ' to ')
-      .replace(/-/g, ' to ')
-      .replace(/\bcm\b/gi, ' centimetres')
-      .replace(/\bmm\b/gi, ' millimetres')
-      .replace(/\bm\b/gi, ' metres')
-      .replace(/\bkg\b/gi, ' kilograms')
-      .replace(/\bg\b/gi, ' grams')
-      .replace(/\bhrs?\b/gi, ' hours')
-      .replace(/\bmins?\b/gi, ' minutes')
-      .replace(/\be\.g\.\b/gi, 'for example')
-      .replace(/\bi\.e\.\b/gi, 'that is')
-      .replace(/\bet al\.\b/gi, 'and others')
-      .replace(/\bvs\b/gi, 'versus')
-      .replace(/\s{2,}/g, ' ')
-      .trim();
-  }
+          const centuryWord = {
+            15: "fifteen",
+            16: "sixteen",
+            17: "seventeen",
+            18: "eighteen",
+            19: "nineteen"
+          }[century] || String(century);
 
-  function speakText(text) {
-    const spokenText = normaliseForSpeech(text);
-    window.speechSynthesis.cancel();
-    const utterance = new SpeechSynthesisUtterance(spokenText);
-    utterance.rate = 0.9;
-    utterance.pitch = 1;
-    window.speechSynthesis.speak(utterance);
-  }
-</script>
+          if (lastTwo === 0) return `${centuryWord} hundred`;
+          if (lastTwo < 10) return `${centuryWord} oh ${lastTwo}`;
+          return `${centuryWord} ${lastTwo}`;
+        })
+        .replace(/\bYou are looking at\s+/gi, 'In front of you is ')
+        .replace(/\bIt represents\s+/gi, 'This object represents ')
+        .replace(/\bThey show\s+/gi, 'These objects show ')
+        .replace(/–/g, ' to ')
+        .replace(/-/g, ' to ')
+        .replace(/\bcm\b/gi, ' centimetres')
+        .replace(/\bmm\b/gi, ' millimetres')
+        .replace(/\bm\b/gi, ' metres')
+        .replace(/\bkg\b/gi, ' kilograms')
+        .replace(/\bg\b/gi, ' grams')
+        .replace(/\bhrs?\b/gi, ' hours')
+        .replace(/\bmins?\b/gi, ' minutes')
+        .replace(/\be\.g\.\b/gi, 'for example')
+        .replace(/\bi\.e\.\b/gi, 'that is')
+        .replace(/\bet al\.\b/gi, 'and others')
+        .replace(/\bvs\b/gi, 'versus')
+        .replace(/\s{2,}/g, ' ')
+        .trim();
+    }
+
+    function speakText(text) {
+      const spokenText = normaliseForSpeech(text);
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(spokenText);
+      utterance.rate = 0.9;
+      utterance.pitch = 1;
+      window.speechSynthesis.speak(utterance);
+    }
+  </script>
+
   <script>
     if ("serviceWorker" in navigator) {
       navigator.serviceWorker.register("./service-worker.js");
