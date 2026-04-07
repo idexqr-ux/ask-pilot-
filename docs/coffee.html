@@ -8,20 +8,19 @@
 </head>
 
 <body>
+  <header class="wrap" aria-hidden="true">
+    <p class="kicker">Coffee Machine</p>
+    <h1>Simple everyday help</h1>
+    <p class="sub">Making a drink, refilling water, and emptying pods.</p>
+  </header>
+
   <main class="wrap">
-
-    <p class="kicker">Ask</p>
-    <h1>Coffee Machine</h1>
-    <p class="hint">A little help when you need it.</p>
-    <p class="hint">You can listen or read — whichever you prefer.</p>
-
-    <p>
-      <button class="listen-btn" onclick="startGuidance()">
-  Start guidance
-</button>
-    </p>
-
-    <hr class="divider">
+    <section aria-labelledby="page-title">
+      <h1 id="page-title" class="sr-only">Coffee machine guide</h1>
+      <p class="sr-only">
+        A simple guide to making a drink, refilling the water, and emptying used pods.
+      </p>
+    </section>
 
     <p class="browse-label">What would you like help with?</p>
 
@@ -31,31 +30,42 @@
       <button onclick="show('pods')">Empty used pods</button>
     </div>
 
-    <section id="coffee" class="card" hidden>
-      <p class="muted-line">Follow these steps to make a coffee.</p>
+    <section id="coffee" class="card">
+      <details open>
+        <summary>Make a drink</summary>
 
-      <p>
-        Press the power button on the top to turn the machine on.
-        When the green light comes on, it’s ready.
-      </p>
-      <p>
-        Lift the lever at the front and place a coffee pod inside, with the flat side facing down.
-        Lower the lever until it clicks into place.
-      </p>
-      <p>
-        Place your cup on the drip tray under the spout.
-        Then press espresso for a small coffee, or lungo for a longer one.
-      </p>
-      <p>
-        The machine will stop automatically when your coffee is ready.
-      </p>
-      <p><strong>You’re all set — enjoy your coffee.</strong></p>
-
-      <p>
-        <button class="quiet-button" onclick="playAudio('audio/lets-make-a-coffee.mp3')">
-          🎧 Listen again
+        <button class="listen-btn" onclick="playAudio('audio/coffee-make.mp3')">
+          Listen — let’s take a look together
         </button>
-      </p>
+
+        <p>
+          Place a cup under the spout. Lift the handle fully, then lower it to secure the pod.
+          Press the button once to start the machine. The coffee will begin to pour.
+        </p>
+
+        <p>
+          Press the power button on the top to turn the machine on.
+          When the green light comes on, it’s ready.
+        </p>
+        <p>
+          Lift the lever at the front and place a coffee pod inside, with the flat side facing down.
+          Lower the lever until it clicks into place.
+        </p>
+        <p>
+          Place your cup on the drip tray under the spout.
+          Then press espresso for a small coffee, or lungo for a longer one.
+        </p>
+        <p>
+          The machine will stop automatically when your coffee is ready.
+        </p>
+        <p><strong>You’re all set — enjoy your coffee.</strong></p>
+
+        <p>
+          <button class="quiet-button" onclick="playAudio('audio/lets-make-a-coffee.mp3')">
+            Listen again
+          </button>
+        </p>
+      </details>
     </section>
 
     <section id="water" class="card" hidden>
@@ -72,7 +82,7 @@
 
       <p>
         <button class="quiet-button" onclick="playAudio('audio/refill-water.mp3')">
-          🎧 Listen again
+          Listen again
         </button>
       </p>
     </section>
@@ -94,43 +104,36 @@
 
       <p>
         <button class="quiet-button" onclick="playAudio('audio/empty-pods.mp3')">
-          🎧 Listen again
+          Listen again
         </button>
       </p>
     </section>
-
   </main>
 
   <script>
-  let currentAudio = null;
-  let guidanceStarted = false;
+    let currentAudio = null;
 
-  function playAudio(file) {
-    if (currentAudio) {
-      currentAudio.pause();
-      currentAudio.currentTime = 0;
+    function playAudio(file) {
+      if (currentAudio) {
+        currentAudio.pause();
+        currentAudio.currentTime = 0;
+      }
+
+      currentAudio = new Audio(file);
+      currentAudio.preload = 'auto';
+      currentAudio.playsInline = true;
+
+      currentAudio.play().catch(err => {
+        console.error("Audio failed:", file, err);
+      });
     }
 
-    currentAudio = new Audio(file);
-    currentAudio.preload = 'auto';
-    currentAudio.playsInline = true;
-
-    currentAudio.play().catch(err => {
-      console.error("Audio failed:", file, err);
-    });
-  }
-
-  function startGuidance() {
-    if (guidanceStarted) return;
-    guidanceStarted = true;
-    playAudio('audio/at-the-coffee-machine.mp3');
-  }
-
-  // Any first interaction starts guidance
-  document.addEventListener('touchstart', startGuidance, { once: true, passive: true });
-  document.addEventListener('pointerdown', startGuidance, { once: true });
-  document.addEventListener('click', startGuidance, { once: true });
-</script>
-
+    function show(id) {
+      document.getElementById('coffee').hidden = true;
+      document.getElementById('water').hidden = true;
+      document.getElementById('pods').hidden = true;
+      document.getElementById(id).hidden = false;
+    }
+  </script>
 </body>
 </html>
