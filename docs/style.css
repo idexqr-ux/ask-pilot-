@@ -240,8 +240,20 @@ h1 {
   font-size: 0.95rem;
   cursor: pointer;
 }
+  .back-link {
+  display: inline-block;
+  margin-top: 20px;
+  color: #2b2b2b;
+  text-decoration: none;
+  border-bottom: 1px solid rgba(43,43,43,0.25);
+  padding-bottom: 2px;
+  text-align: center;
+}
 
-.listen-btn:hover,
+.back-link:hover {
+  border-bottom-color: rgba(43,43,43,0.5);
+}
+
 .listen-btn:focus {
   border-color: #b8c2ca;
   color: var(--ink);
