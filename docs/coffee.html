@@ -5,38 +5,63 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Coffee Machine — Ask</title>
   <link rel="stylesheet" href="style.css" />
+  <style>
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+  </style>
 </head>
 
 <body>
-  <header class="wrap" aria-hidden="true">
+  <header class="wrap">
     <p class="kicker">Coffee Machine</p>
     <h1>Simple everyday help</h1>
     <p class="sr-only">
-  You have scanned the coffee machine QR code. The guide will help you make a drink, refill the water, and empty used pods.
-</p>
+      You have scanned the coffee machine QR code. This guide will help you make a drink, refill the water, and empty used pods.
+    </p>
   </header>
 
   <main class="wrap">
     <section aria-labelledby="page-title">
-      <h1 id="page-title" class="sr-only">Coffee machine how-to guide</h1>
+      <h2 id="page-title" class="sr-only">Coffee machine help guide</h2>
       <p class="sr-only">
-        Help with making a drink, refilling the water, and emptying used pods.
+        Choose one of the following options: make a coffee, refill the water, or empty used pods.
       </p>
     </section>
 
-    <p class="browse-label">What would you like help with?</p>
+    <p class="browse-label" id="help-options">What would you like help with?</p>
 
-    <div class="chips">
-      <button onclick="show('coffee')">Make a coffee</button>
-      <button onclick="show('water')">Refill the water</button>
-      <button onclick="show('pods')">Empty used pods</button>
+    <div class="chips" role="group" aria-labelledby="help-options">
+      <button type="button" onclick="show('coffee')" aria-controls="coffee" aria-label="Show help for making a coffee">
+        Make a coffee
+      </button>
+      <button type="button" onclick="show('water')" aria-controls="water" aria-label="Show help for refilling the water">
+        Refill the water
+      </button>
+      <button type="button" onclick="show('pods')" aria-controls="pods" aria-label="Show help for emptying used pods">
+        Empty used pods
+      </button>
     </div>
 
-    <section id="coffee" class="card">
-      <details open>
-        <summary>Make a drink</summary>
+    <p id="section-status" class="sr-only" aria-live="polite"></p>
 
-        <button class="listen-btn" onclick="playAudio('audio/coffee-make.mp3')">
+    <section id="coffee" class="card" aria-labelledby="coffee-title">
+      <details open>
+        <summary id="coffee-title">Make a drink</summary>
+
+        <button
+          type="button"
+          class="listen-btn"
+          onclick="playAudio('audio/coffee-make.mp3')"
+          aria-label="Play audio guide for making a drink">
           Listen — let’s take a look together
         </button>
 
@@ -49,32 +74,41 @@
           Press the power button on the top to turn the machine on.
           When the green light comes on, it’s ready.
         </p>
+
         <p>
           Lift the lever at the front and place a coffee pod inside, with the flat side facing down.
           Lower the lever until it clicks into place.
         </p>
+
         <p>
           Place your cup on the drip tray under the spout.
-          Then press espresso for a small coffee, or 
+          Then press espresso for a small coffee, or
+          <span aria-hidden="true">lungo</span>
           <span class="sr-only">loon go</span>
-<span aria-hidden="true">lungo</span>
-<span class="sr-only">loon go</span>
-for a longer one.
+          for a longer one.
         </p>
+
         <p>
           The machine will stop automatically when your coffee is ready.
         </p>
+
         <p><strong>You’re all set — enjoy your coffee.</strong></p>
 
         <p>
-          <button class="quiet-button" onclick="playAudio('audio/lets-make-a-coffee.mp3')">
+          <button
+            type="button"
+            class="quiet-button"
+            onclick="playAudio('audio/lets-make-a-coffee.mp3')"
+            aria-label="Play the audio guide again for making a coffee">
             Listen again
           </button>
         </p>
       </details>
     </section>
 
-    <section id="water" class="card" hidden>
+    <section id="water" class="card" hidden aria-labelledby="water-title">
+      <h2 id="water-title" class="sr-only">Refill the water</h2>
+
       <p class="muted-line">Here’s how to refill the water tank.</p>
 
       <p>
@@ -87,13 +121,19 @@ for a longer one.
       </p>
 
       <p>
-        <button class="quiet-button" onclick="playAudio('audio/refill-water.mp3')">
+        <button
+          type="button"
+          class="quiet-button"
+          onclick="playAudio('audio/refill-water.mp3')"
+          aria-label="Play the audio guide for refilling the water">
           Listen again
         </button>
       </p>
     </section>
 
-    <section id="pods" class="card" hidden>
+    <section id="pods" class="card" hidden aria-labelledby="pods-title">
+      <h2 id="pods-title" class="sr-only">Empty used pods</h2>
+
       <p class="muted-line">Empty the used pods safely before making another coffee.</p>
 
       <p>
@@ -109,7 +149,11 @@ for a longer one.
       </p>
 
       <p>
-        <button class="quiet-button" onclick="playAudio('audio/empty-pods.mp3')">
+        <button
+          type="button"
+          class="quiet-button"
+          onclick="playAudio('audio/empty-pods.mp3')"
+          aria-label="Play the audio guide for emptying used pods">
           Listen again
         </button>
       </p>
@@ -135,10 +179,21 @@ for a longer one.
     }
 
     function show(id) {
-      document.getElementById('coffee').hidden = true;
-      document.getElementById('water').hidden = true;
-      document.getElementById('pods').hidden = true;
-      document.getElementById(id).hidden = false;
+      const sections = ['coffee', 'water', 'pods'];
+      const labels = {
+        coffee: 'Make a coffee',
+        water: 'Refill the water',
+        pods: 'Empty used pods'
+      };
+
+      sections.forEach(sectionId => {
+        document.getElementById(sectionId).hidden = sectionId !== id;
+      });
+
+      const status = document.getElementById('section-status');
+      if (status && labels[id]) {
+        status.textContent = `${labels[id]} section shown.`;
+      }
     }
   </script>
 </body>
