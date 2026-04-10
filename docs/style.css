@@ -225,7 +225,7 @@ h1 {
 }
 
 .muted-line {
-  margin: 10px 0 0;
+  margin: 12px 0;   /* was tighter before */
   color: var(--muted);
   font-size: 0.95rem;
 }
@@ -317,6 +317,9 @@ a.card:active {
 
 .card .muted-line {
   margin-top: 6px;
+}
+.muted-line + .listen-group {
+  margin-top: 1.10rem;
 }
 
 .runner-title {
@@ -420,7 +423,7 @@ details summary {
 }
 
 .footer {
-  padding: 18px 0 28px;
+  padding: 28px 0 36px;
   color: var(--muted);
 }
 
@@ -432,9 +435,13 @@ details summary {
   margin: 2rem 0;
 }
 
-.listen-group .quiet-button {
-  flex: 1 1 220px;   /* 👈 same width, wraps if needed */
-  max-width: 320px;  /* 👈 stops them getting too wide */
+.listen-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  justify-content: center;
+  margin-top: 1.5rem;   /* 👈 more space above */
+  margin-bottom: 0.5rem;
 }
 
 .quiet-button {
