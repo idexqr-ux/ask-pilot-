@@ -27,7 +27,6 @@
     </p>
   </section>
 
-  <!-- Event details -->
   <h1>Spring Home and Living Show</h1>
   <p class="sub">National Exhibition Centre, Birmingham</p>
 
@@ -39,36 +38,27 @@
     Hall 3, Block B, Row 12 — just to the right as you enter
   </p>
 
-  <!-- Calendar -->
   <div class="listen-group">
-    <a href="YOUR-CALENDAR-LINK" class="quiet-button">
-      Add to calendar
-    </a>
+    <a href="YOUR-CALENDAR-LINK" class="quiet-button">Add to calendar</a>
   </div>
 
-  <!-- Travel -->
   <p class="muted-line">Travel and arrival</p>
 
   <div class="listen-group">
-    <a href="YOUR-TRAIN-LINK" class="quiet-button">
-      Train travel
-    </a>
-
+    <a href="YOUR-TRAIN-LINK" class="quiet-button">Train travel</a>
     <a href="YOUR-MAPS-LINK" class="quiet-button" target="_blank" rel="noopener">
       Open directions in Google Maps
     </a>
   </div>
 
-  <!-- On arrival -->
   <div class="listen-group">
-    <button class="quiet-button" type="button" onclick="playAudio('audio/parking.mp3')">
+    <button class="quiet-button" type="button" onclick="playEmbeddedAudio('parkingAudio')">
       Parking — note
     </button>
-
-    <a href="YOUR-TICKET-LINK" class="quiet-button">
-      View ticket QR
-    </a>
+    <a href="YOUR-TICKET-LINK" class="quiet-button">View ticket QR</a>
   </div>
+
+  <audio id="parkingAudio" src="audio/parking.mp3" preload="auto"></audio>
 
   <footer class="footer" style="text-align: center;">
     <a href="index.html" class="back-link">Back to IdexQR</a>
