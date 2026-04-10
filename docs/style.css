@@ -323,14 +323,27 @@ a.card:active {
   margin: 0 0 4px 0;
 }
 
-.card-details { padding: 0; }
-
 .card-summary {
   list-style: none;
   cursor: pointer;
-  padding: 14px;
+  padding: 14px 18px;
   font-weight: 600;
-  color: var(--muted);
+  color: #ffffff;
+  background: #b3261e;
+  border-radius: 999px;
+  text-align: center;
+  margin: 0;
+}
+
+.card-summary::after {
+  content: "";
+}
+
+.card-details[open] .card-summary {
+  color: #ffffff;
+  background: #8f1f19;
+  border-bottom: none;
+  margin-bottom: 10px;
 }
 
 .row-top {
