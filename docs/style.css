@@ -603,3 +603,12 @@ sup {
   max-width: 320px;
   margin: 0 auto;
 }
+
+.powered-by a {
+  color: var(--muted);
+  text-decoration: none;
+}
+
+.powered-by a:hover {
+  text-decoration: underline;
+}
