@@ -326,13 +326,9 @@ a.card:active {
 .card-summary {
   list-style: none;
   cursor: pointer;
-  padding: 14px 18px;
-  font-weight: 600;
-  color: #ffffff;
-  background: #b3261e;
-  border-radius: 999px;
-  text-align: center;
-  margin: 0;
+  padding: 0;   /* let quiet-button control spacing */
+  background: none;
+  border: none;
 }
 
 .card-summary::after {
@@ -440,22 +436,21 @@ details summary {
 
 .quiet-button {
   display: inline-block;
-  background: #b3261e;
-  border: 1px solid #b3261e;
+  background: #FFFFFF;
+  border: 1px solid #B8C6C1;
   border-radius: 999px;
   padding: 0.8rem 1.1rem;
   font: inherit;
   font-size: 0.98rem;
-  color: #ffffff;
+  color: #2b2b2b;
   cursor: pointer;
   line-height: 1.2;
-  text-decoration: none;
 }
 
 .quiet-button:hover,
 .quiet-button:focus {
-  background: #8f1f19;
-  border-color: #8f1f19;
+  background: #F3F5F4;
+  border-color: #aebdb7;
 }
 
 .sr-only {
