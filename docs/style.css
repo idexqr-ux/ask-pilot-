@@ -432,11 +432,9 @@ details summary {
   margin: 2rem 0;
 }
 
-.listen-group {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.75rem;
-  margin-top: 1rem;
+.listen-group .quiet-button {
+  flex: 1 1 220px;   /* 👈 same width, wraps if needed */
+  max-width: 320px;  /* 👈 stops them getting too wide */
 }
 
 .quiet-button {
@@ -587,6 +585,10 @@ sup {
   color: #2b2b2b;
   cursor: pointer;
   line-height: 1.2;
+  text-decoration: none;
+
+  min-width: 220px;          /* 👈 makes them consistent */
+  text-align: center;        /* 👈 centres text inside */
 }
 
 .card-summary.quiet-button {
