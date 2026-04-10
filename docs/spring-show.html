@@ -53,6 +53,11 @@
         Open in maps
       </a>
     </div>
+    <div class="listen-group">
+  <button class="quiet-button" type="button" onclick="playEmbeddedAudio('eventAudio')">
+    Event — note
+  </button>
+</div>
 
     <div class="listen-group">
       <button class="quiet-button" type="button" onclick="playEmbeddedAudio('parkingAudio')">
@@ -74,6 +79,7 @@
 <!-- 👇 move audio here -->
 <audio id="parkingAudio" src="audio/parking.mp3" preload="auto"></audio>
 <audio id="trainAudio" src="audio/train.mp3" preload="auto"></audio>
+<audio id="eventAudio" src="audio/event.mp3" preload="auto"></audio>
  
 <script>
   let currentAudio = null;
