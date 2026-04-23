@@ -3,9 +3,191 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Coffee Machine — Listen</title>
-  <link rel="stylesheet" href="style.css?v=8" />
+  <title>Ask — Coffee Machine</title>
+  <meta
+    name="description"
+    content="A calm, simple Ask demo for a coffee machine in the IdexQR style."
+  />
   <style>
+    :root {
+      --bg: #f7f9f8;
+      --card: #ffffff;
+      --ink: #1f2a27;
+      --muted: #66726e;
+      --line: #d9e2de;
+      --soft: #eef3f1;
+      --brand: #b8c6c1;
+      --brand-deep: #8ea39c;
+      --shadow: 0 10px 30px rgba(31, 42, 39, 0.07);
+      --radius: 22px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: Georgia, "Times New Roman", serif;
+      line-height: 1.5;
+    }
+
+    body {
+      min-height: 100vh;
+    }
+
+    .wrap {
+      width: min(720px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 28px 0 48px;
+    }
+
+    .hero {
+      text-align: center;
+      padding: 18px 0 12px;
+    }
+
+    .kicker {
+      margin: 0 0 10px;
+      font-size: 0.95rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(2rem, 5vw, 3rem);
+      font-weight: normal;
+      color: var(--ink);
+    }
+
+    .sub {
+      margin: 10px auto 0;
+      max-width: 38ch;
+      font-size: 1.05rem;
+      color: var(--muted);
+    }
+
+    .panel {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 22px;
+      margin-top: 22px;
+    }
+
+    .intro {
+      margin-top: 0;
+      color: var(--muted);
+    }
+
+    .question-list {
+      display: grid;
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .quiet-button {
+      appearance: none;
+      width: 100%;
+      border: 1px solid var(--line);
+      background: var(--soft);
+      color: var(--ink);
+      border-radius: 16px;
+      padding: 15px 16px;
+      font: inherit;
+      font-size: 1rem;
+      text-align: left;
+      cursor: pointer;
+      transition: transform 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+    }
+
+    .quiet-button:hover,
+    .quiet-button:focus-visible {
+      outline: none;
+      transform: translateY(-1px);
+      border-color: var(--brand-deep);
+      background: #f3f7f5;
+    }
+
+    .quiet-button.active {
+      background: #edf4f1;
+      border-color: var(--brand-deep);
+    }
+
+    .answer {
+      margin-top: 18px;
+      padding: 18px;
+      border-radius: 18px;
+      background: #fbfcfc;
+      border: 1px solid var(--line);
+    }
+
+    .answer[hidden] {
+      display: none;
+    }
+
+    .answer h2 {
+      margin: 0 0 10px;
+      font-size: 1.2rem;
+      font-weight: normal;
+    }
+
+    .answer p {
+      margin: 0 0 12px;
+      color: var(--ink);
+    }
+
+    .helper {
+      margin-top: 10px;
+      font-size: 0.96rem;
+      color: var(--muted);
+    }
+
+    .controls {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 14px;
+    }
+
+    .small-button {
+      appearance: none;
+      border: 1px solid var(--line);
+      background: white;
+      color: var(--ink);
+      border-radius: 999px;
+      padding: 10px 14px;
+      font: inherit;
+      cursor: pointer;
+    }
+
+    .small-button:hover,
+    .small-button:focus-visible {
+      outline: none;
+      border-color: var(--brand-deep);
+      background: #f8fbfa;
+    }
+
+    .footer-link {
+      display: inline-block;
+      margin-top: 20px;
+      color: var(--muted);
+      text-decoration: none;
+      border-bottom: 1px solid transparent;
+    }
+
+    .footer-link:hover,
+    .footer-link:focus-visible {
+      border-color: var(--muted);
+      outline: none;
+    }
+
     .sr-only {
       position: absolute;
       width: 1px;
@@ -17,196 +199,183 @@
       white-space: nowrap;
       border: 0;
     }
+
+    @media (max-width: 560px) {
+      .panel {
+        padding: 18px;
+      }
+
+      .quiet-button {
+        padding: 14px;
+      }
+    }
   </style>
 </head>
-
 <body>
-  <header class="wrap">
-    <p class="kicker">Coffee Machine</p>
-    <h1>Simple everyday help</h1>
-    <p class="sr-only">
-      You have scanned the coffee machine QR code. This guide will help you make a drink, refill the water, and empty used pods.
-    </p>
-  </header>
-
   <main class="wrap">
-    <p class="sr-only">
-  This page contains help for using the coffee machine. Choose make a coffee, refill the water, or empty used pods.
-</p>
-    <section aria-labelledby="page-title">
-      <h2 id="page-title" class="sr-only">Coffee machine help guide</h2>
-      <p class="sr-only">
-        Choose one of the following options: make a coffee, refill the water, or empty used pods.
+    <section class="hero" aria-labelledby="page-title">
+      <p class="kicker">Ask</p>
+      <h1 id="page-title">Coffee Machine</h1>
+      <p class="sub">
+        Calm, simple help for the small things you need in the moment.
       </p>
     </section>
 
-    <p class="browse-label" id="help-options">What would you like help with?</p>
+    <section class="panel" aria-labelledby="ask-heading">
+      <h2 id="ask-heading" class="sr-only">Coffee machine questions</h2>
+      <p class="intro">
+        Choose a question below and I’ll guide you through it. Audio is included for each answer.
+      </p>
 
-    <div class="chips" role="group" aria-labelledby="help-options">
-      <button type="button" onclick="show('coffee')" aria-controls="coffee" aria-label="Show help for making a coffee">
-        Make a coffee
-      </button>
-      <button type="button" onclick="show('water')" aria-controls="water" aria-label="Show help for refilling the water">
-        Refill the water
-      </button>
-      <button type="button" onclick="show('pods')" aria-controls="pods" aria-label="Show help for emptying used pods">
-        Empty used pods
-      </button>
-    </div>
-
-    <p id="section-status" class="sr-only" aria-live="polite"></p>
-
-    <section id="coffee" class="card" aria-labelledby="coffee-title">
-      <details open>
-        <summary id="coffee-title">Make a drink</summary>
-
-        <button
-          type="button"
-          class="listen-btn"
-          onclick="playAudio('audio/coffee-make.mp3')"
-          aria-label="Play audio guide for making a drink">
-          Listen — let’s take a look together
+      <div class="question-list">
+        <button class="quiet-button" data-answer="coffeeAnswer">
+          How do I make a coffee?
         </button>
+        <button class="quiet-button" data-answer="waterAnswer">
+          How do I refill the water?
+        </button>
+        <button class="quiet-button" data-answer="podsAnswer">
+          How do I empty the used pods?
+        </button>
+        <button class="quiet-button" data-answer="stoppedAnswer">
+          What should I do if it stops or seems stuck?
+        </button>
+      </div>
 
+      <article id="coffeeAnswer" class="answer" hidden>
+        <h2>How do I make a coffee?</h2>
         <p>
-          Place a cup under the spout. Lift the handle fully, then lower it to secure the pod.
-          Press the button once to start the machine. The coffee will begin to pour.
+          Place your cup under the spout. Lift the lever fully, insert your pod, and close the lever gently.
+          Then press the coffee button once. Wait while the machine runs, and your drink should begin to pour within a few seconds.
         </p>
-
         <p>
-          Press the power button on the top to turn the machine on.
-          When the green light comes on, it’s ready.
+          If you would like a larger drink, use the lungo button if your machine has one.
         </p>
+        <div class="controls">
+          <button class="small-button" data-audio="audioCoffee">Play audio</button>
+          <button class="small-button" data-stop>Stop audio</button>
+        </div>
+        <p class="helper">A gentle pause before lifting the cup helps avoid drips.</p>
+      </article>
 
+      <article id="waterAnswer" class="answer" hidden>
+        <h2>How do I refill the water?</h2>
         <p>
-          Lift the lever at the front and place a coffee pod inside, with the flat side facing down.
-          Lower the lever until it clicks into place.
+          Remove the water tank from the back or side of the machine, depending on the model. Fill it with fresh cold water,
+          then place it back firmly so it sits flat and connected properly.
         </p>
-
         <p>
-          Place your cup on the drip tray under the spout.
-          Then press espresso for a small coffee, or
-          <span aria-hidden="true">lungo</span>
-          <span class="sr-only">loon go</span>
-          for a longer one.
+          If the machine does not respond straight away, check that the tank is pushed fully into place.
         </p>
+        <div class="controls">
+          <button class="small-button" data-audio="audioWater">Play audio</button>
+          <button class="small-button" data-stop>Stop audio</button>
+        </div>
+      </article>
 
+      <article id="podsAnswer" class="answer" hidden>
+        <h2>How do I empty the used pods?</h2>
         <p>
-          The machine will stop automatically when your coffee is ready.
+          Open the front or lift the lever so the used pod drops into the container. Then slide out the pod drawer or capsule tray,
+          empty it into the bin, and place it back securely.
         </p>
-
-        <p><strong>You’re all set — enjoy your coffee.</strong></p>
-
         <p>
-          <button
-            type="button"
-            class="quiet-button"
-            onclick="playAudio('audio/lets-make-a-coffee.mp3')"
-            aria-label="Play the audio guide again for making a coffee">
-            Listen again
-          </button>
+          If the drawer feels full or stiff, it usually means a pod is resting awkwardly inside. A gentle shake is often enough.
         </p>
-      </details>
+        <div class="controls">
+          <button class="small-button" data-audio="audioPods">Play audio</button>
+          <button class="small-button" data-stop>Stop audio</button>
+        </div>
+      </article>
+
+      <article id="stoppedAnswer" class="answer" hidden>
+        <h2>What should I do if it stops or seems stuck?</h2>
+        <p>
+          First, check the basics: is there water in the tank, is the pod drawer full, and is the lever fully closed?
+          If all looks fine, turn the machine off, wait a few seconds, and switch it on again.
+        </p>
+        <p>
+          If it still does not respond, it may need a reset or descaling, depending on the machine.
+        </p>
+        <div class="controls">
+          <button class="small-button" data-audio="audioStopped">Play audio</button>
+          <button class="small-button" data-stop>Stop audio</button>
+        </div>
+      </article>
+
+      <a href="#" class="footer-link">Back to IdexQR</a>
     </section>
 
-    <section id="water" class="card" hidden aria-labelledby="water-title">
-      <h2 id="water-title" class="sr-only">Refill the water</h2>
-
-      <p class="muted-line">Here’s how to refill the water tank.</p>
-
+    <section class="sr-only" aria-label="Screen reader introduction">
       <p>
-        Lift the water tank from the back of the machine.
-        Fill it with fresh cold water up to the MAX line.
-      </p>
-      <p>
-        Place it back onto the machine and press it down gently so it sits flat.
-        Check the green light is on before making a coffee.
-      </p>
-
-      <p>
-        <button
-          type="button"
-          class="quiet-button"
-          onclick="playAudio('audio/refill-water.mp3')"
-          aria-label="Play the audio guide for refilling the water">
-          Listen again
-        </button>
+        You have opened the Ask coffee machine demo. Choose one of the guided questions to hear simple help.
       </p>
     </section>
 
-    <section id="pods" class="card" hidden aria-labelledby="pods-title">
-      <h2 id="pods-title" class="sr-only">Empty used pods</h2>
-
-      <p class="muted-line">Empty the used pods safely before making another coffee.</p>
-
-      <p>
-        Switch the machine off and allow it to cool down.
-        Pull out the used pod container from the front.
-      </p>
-      <p>
-        Empty the pods into the bin.
-        Rinse if needed, then place it back into the machine.
-      </p>
-      <p>
-        Switch the machine back on and wait for the green light.
-      </p>
-
-      <p>
-        <button
-          type="button"
-          class="quiet-button"
-          onclick="playAudio('audio/empty-pods.mp3')"
-          aria-label="Play the audio guide for emptying used pods">
-          Listen again
-        </button>
-      </p>
-      
-       </section>
+    <audio id="audioCoffee" preload="none">
+      <source src="audio/make-a-coffee.mp3" type="audio/mpeg" />
+    </audio>
+    <audio id="audioWater" preload="none">
+      <source src="audio/refill-water.mp3" type="audio/mpeg" />
+    </audio>
+    <audio id="audioPods" preload="none">
+      <source src="audio/empty-pods.mp3" type="audio/mpeg" />
+    </audio>
+    <audio id="audioStopped" preload="none">
+      <source src="audio/machine-stopped.mp3" type="audio/mpeg" />
+    </audio>
   </main>
 
-  <p class="powered-by">
-  Powered by IdexQR
-</p>
-
-  <footer class="footer" style="text-align: center;">
-    <a href="listen.html" class="back-link">Back to Listen</a>
-  </footer>
-
   <script>
+    const questionButtons = document.querySelectorAll('.quiet-button[data-answer]');
+    const answers = document.querySelectorAll('.answer');
+    const audioButtons = document.querySelectorAll('[data-audio]');
+    const stopButtons = document.querySelectorAll('[data-stop]');
     let currentAudio = null;
 
-    function playAudio(file) {
+    function stopCurrentAudio() {
       if (currentAudio) {
         currentAudio.pause();
         currentAudio.currentTime = 0;
       }
+    }
 
-      currentAudio = new Audio(file);
-      currentAudio.preload = 'auto';
-      currentAudio.playsInline = true;
+    function openAnswer(answerId) {
+      answers.forEach(answer => {
+        answer.hidden = answer.id !== answerId;
+      });
 
-      currentAudio.play().catch(err => {
-        console.error("Audio failed:", file, err);
+      questionButtons.forEach(button => {
+        const active = button.dataset.answer === answerId;
+        button.classList.toggle('active', active);
+        button.setAttribute('aria-expanded', String(active));
       });
     }
 
-    function show(id) {
-      const sections = ['coffee', 'water', 'pods'];
-      const labels = {
-        coffee: 'Make a coffee',
-        water: 'Refill the water',
-        pods: 'Empty used pods'
-      };
-
-      sections.forEach(sectionId => {
-        document.getElementById(sectionId).hidden = sectionId !== id;
+    questionButtons.forEach(button => {
+      button.setAttribute('aria-expanded', 'false');
+      button.addEventListener('click', () => {
+        stopCurrentAudio();
+        openAnswer(button.dataset.answer);
       });
+    });
 
-      const status = document.getElementById('section-status');
-      if (status && labels[id]) {
-        status.textContent = `${labels[id]} section shown.`;
-      }
-    }
+    audioButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        const audio = document.getElementById(button.dataset.audio);
+        if (!audio) return;
+
+        stopCurrentAudio();
+        currentAudio = audio;
+        currentAudio.play().catch(() => {
+          // Safe fallback if autoplay or file access is blocked.
+        });
+      });
+    });
+
+    stopButtons.forEach(button => {
+      button.addEventListener('click', stopCurrentAudio);
+    });
   </script>
 </body>
 </html>
