@@ -4,6 +4,7 @@
       --line: #d7dde3;
       --ink: #1c2623;
       --muted: #66726e;
+      --muted-deep: #3f4a47;
       --celadon: #c9d5d0;
       --celadon-soft: #e5ece9;
       --ask-green: #8faf9f;
@@ -65,8 +66,18 @@
 
     .ask-title {
       display: block;
-      color: var(--ask-green);
+      color: var(--muted-deep);
       margin-bottom: 1px;
+    }
+
+    .family-endorsement {
+      display: block;
+      margin: 0 0 0.85rem;
+      color: var(--muted);
+      font-size: 0.9rem;
+      font-weight: normal;
+      letter-spacing: 0.02em;
+      line-height: 1.4;
     }
 
     .coffee-title {
